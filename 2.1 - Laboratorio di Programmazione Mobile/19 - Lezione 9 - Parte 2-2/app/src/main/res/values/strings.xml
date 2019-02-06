@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">MobileProgramming2018</string>
+
+    <string name="city_label">City Name</string>
+    <string name="region_label">Region Name</string>
+
+    <string name="main_exit">Exit</string>
+    <string name="main_settings">Settings</string>
+    <string name="main_demo">Demo</string>
+    <string name="main_refresh">Refresh</string>
+
+    <string name="dialog_title">Warning</string>
+    <string name="dialog_message">Do you want to exit?</string>
+
+    <string name="toast_demo">Hello!</string>
+
+    <string name="preference_database_title">Switch Database</string>
+    <string name="preference_database_summary_on">Enable SQLite Database</string>
+    <string name="preference_database_summary_off">Enable RoomDatabase</string>
+
+    <string name="preference_http_title">Switch HTTP Request</string>
+    <string name="preference_http_summary_on">Use URLConnection</string>
+    <string name="preference_http_summary_off">Use Volley</string>
+
+    <string name="preference_location_title">Location Request</string>
+    <string name="preference_location_summary_on">Use LocationManager</string>
+    <string name="preference_location_summary_off">Use GoogleService</string>
+
+</resources>

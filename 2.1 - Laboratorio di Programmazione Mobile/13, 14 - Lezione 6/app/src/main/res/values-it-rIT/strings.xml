@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MobileProgramming2018</string>
+    <string name="city_label">Nome Città</string>
+    <string name="region_label">Nome Regione</string>
+
+    <string name="main_exit">Esci</string>
+    <string name="main_demo">Prova</string>
+
+    <string name="dialog_title">Attenzione</string>
+    <string name="dialog_message">Vuoi uscire?</string>
+
+    <string name="toast_demo">Ciao!</string>
+</resources>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MobileProgramming2018</string>
+
+    <string name="city_label">City Name</string>
+    <string name="region_label">Region Name</string>
+
+    <string name="main_exit">Exit</string>
+    <string name="main_demo">Demo</string>
+
+    <string name="dialog_title">Warning</string>
+    <string name="dialog_message">Do you want to exit?</string>
+
+    <string name="toast_demo">Hello!</string>
+
+</resources>

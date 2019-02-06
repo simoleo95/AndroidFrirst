@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MobileProgramming2018</string>
+    <string name="city_label">Nome Città</string>
+    <string name="region_label">Nome Regione</string>
+
+    <string name="main_exit">Esci</string>
+    <string name="main_settings">Impostazioni</string>
+    <string name="main_demo">Prova</string>
+    <string name="main_refresh">Aggiorna</string>
+
+    <string name="dialog_title">Attenzione</string>
+    <string name="dialog_message">Vuoi uscire?</string>
+
+    <string name="toast_demo">Ciao!</string>
+
+    <string name="preference_database_title">Cambia Database</string>
+    <string name="preference_database_summary_on">Abilita SQLite Database</string>
+    <string name="preference_database_summary_off">Abilita RoomDatabase</string>
+
+    <string name="preference_http_title">Cambia Richesta HTTP</string>
+    <string name="preference_http_summary_on">Usa URLConnection</string>
+    <string name="preference_http_summary_off">Usa Volley</string>
+</resources>
