@@ -1,20 +1,15 @@
 package it.univaq.mobileprogramming;
 
-/**
- * MobileProgramming2018
- * Created by leonardo on 19/10/2018.
- * <p>
- * BiTE s.r.l.
- * contact info@bitesrl.it
- */
-public class City {
 
+public class Location
+{
     private String name;
     private String region;
+    private String cap;
 
-    public City(){}
+    public Location(){}
 
-    public City(String name, String region) {
+    public Location(String name, String region) {
         this.name = name;
         this.region = region;
     }
