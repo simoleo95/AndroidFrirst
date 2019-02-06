@@ -6,30 +6,23 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-/**
- * MobileProgramming2018
- * Created by leonardo on 19/10/2018.
- * <p>
- * BiTE s.r.l.
- * contact info@bitesrl.it
- */
 public class Adapter extends BaseAdapter {
 
-    private City[] data;
+    private Farmacia[] farmacia;
 
-    public Adapter(City[] data) {
-        this.data = data;
-    }
+
+    public Adapter(Farmacia[] farmacia){this.farmacia = farmacia;}
 
     @Override
     public int getCount() {
-        return data.length;
+        return farmacia.length;
     }
 
     @Override
-    public City getItem(int position) {
-        return data[position];
+    public Farmacia getItem(int position) {
+        return farmacia[position];
     }
+
 
     @Override
     public long getItemId(int position) {
@@ -52,9 +45,9 @@ public class Adapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        City city = getItem(position);
-        holder.title.setText(city.getName());
-        holder.subtitle.setText(city.getRegion());
+        Farmacia farmacia = getItem(position);
+        holder.title.setText(farmacia.getName());
+        holder.subtitle.setText(farmacia.getCity().getName());
 
         return convertView;
     }

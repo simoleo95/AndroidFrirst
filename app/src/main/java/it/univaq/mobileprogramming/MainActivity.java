@@ -13,7 +13,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        City[] data = new City[3];
+        City[] data = new City[4];
+        Farmacia[] farmacia = new Farmacia[2];
 
         City c1 = new City("Roma", "Lazio");
         data[0] = c1;
@@ -24,9 +25,22 @@ public class MainActivity extends AppCompatActivity {
         City c3 = new City("Firenze", "Toscana");
         data[2] = c3;
 
+        City c4 = new City("Ascoli Piceno", "Marche");
+        data[3] = c4;
+
+        Farmacia farm1 = new Farmacia();
+        farm1.setCity(c1);
+        farm1.setName("Popoli");
+
+        Farmacia farm2 = new Farmacia();
+        farm2.setName("Pippo");
+        farm2.setCity(c2);
+        farmacia[0]=farm1;
+        farmacia[1]=farm2;
 
         // Adapter adapter = new Adapter(data);
-        AdapterRecycler adapter = new AdapterRecycler(data);
+        AdapterRecycler adapter = new AdapterRecycler(farmacia);
+
 
         RecyclerView list = findViewById(R.id.main_list);
 

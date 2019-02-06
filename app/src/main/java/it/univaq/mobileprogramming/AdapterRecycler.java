@@ -11,11 +11,12 @@ import android.widget.TextView;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder> {
 
-    private City[] data;
+    private Farmacia[] data;
 
-    public AdapterRecycler(City[] data){
+    public AdapterRecycler(Farmacia[] data){
         this.data = data;
     }
+
 
     @NonNull
     @Override
@@ -28,9 +29,9 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
-        City city = data[i];
-        viewHolder.title.setText(city.getName());
-        viewHolder.subtitle.setText(city.getRegion());
+        Farmacia farmacia = data[i];
+        viewHolder.title.setText(farmacia.getName());
+        viewHolder.subtitle.setText(farmacia.getCity().getName());
     }
 
     @Override
@@ -53,11 +54,11 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
                 @Override
                 public void onClick(View v) {
 
-                    City city = data[getAdapterPosition()];
+                    Farmacia farmacia = data[getAdapterPosition()];
 
                     Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                    intent.putExtra("cityName", city.getName());
-                    intent.putExtra("regionName", city.getRegion());
+                    intent.putExtra("cityName", farmacia.getName());
+                    intent.putExtra("city", farmacia.getCity().getName());
                     v.getContext().startActivity(intent);
                 }
             });
