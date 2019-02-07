@@ -30,8 +30,8 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         Farmacia farmacia = data[i];
-        viewHolder.title.setText(farmacia.getName());
-        viewHolder.subtitle.setText(farmacia.getCity().getName());
+        viewHolder.title.setText(farmacia.getDescrizione());
+        viewHolder.subtitle.setText(farmacia.getLocation().getIndirizzo());
     }
 
     @Override
@@ -57,8 +57,8 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
                     Farmacia farmacia = data[getAdapterPosition()];
 
                     Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                    intent.putExtra("cityName", farmacia.getName());
-                    intent.putExtra("city", farmacia.getCity().getName());
+                    intent.putExtra("cityName", farmacia.getDescrizione());
+                    intent.putExtra("city", farmacia.getLocation().getIndirizzo());
                     v.getContext().startActivity(intent);
                 }
             });

@@ -13,10 +13,13 @@ public class Farmacia
     private int codiceTipologia;
     private Location location;
     
+    
+    
     //Basic constructor
     public Farmacia()
     {
     }
+    
     
     /**
      *

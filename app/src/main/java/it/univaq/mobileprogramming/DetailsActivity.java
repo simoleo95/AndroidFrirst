@@ -5,13 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-/**
- * MobileProgramming2018
- * Created by leonardo on 26/10/2018.
- * <p>
- * BiTE s.r.l.
- * contact info@bitesrl.it
- */
 public class DetailsActivity extends AppCompatActivity {
 
     @Override
