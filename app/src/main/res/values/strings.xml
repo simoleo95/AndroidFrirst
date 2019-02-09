@@ -1,6 +1,13 @@
 <resources>
-    <string name="app_name">MobileProgramming2018</string>
+    <string name="app_name">PHARMA CIA</string>
 
     <string name="city_label">City Name</string>
     <string name="region_label">Region Name</string>
+
+
+
+
+
+
+
 </resources>
