@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This code follows from https://developer.android.com/training/articles/security-config#CleartextTrafficPermitted
+     and is here to enable HTTP internet connections for all apps based on Android Pie 9.0 and beyond
+     -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted = "true">
+        <domain includeSubdomains = "true">www.dati.salute.gov.it</domain>
+    </domain-config>
+</network-security-config>

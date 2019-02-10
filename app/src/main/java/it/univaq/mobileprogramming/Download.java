@@ -1,6 +1,7 @@
 package it.univaq.mobileprogramming;
 
 
+import android.animation.FloatArrayEvaluator;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.FloatRange;
@@ -33,10 +34,35 @@ import java.util.List;
 import static org.apache.commons.csv.CSVFormat.EXCEL;
 
 
-class parseCSVfromURL
+class ParseCSVfromURL
 {
-    //Function based on https://stackoverflow.com/questions/4120942/programatically-downloading-csv-files-with-java
-    public void try_1()
+    //All the pharmacies found in the Excel file
+    private ArrayList<String[]> farmacie = new ArrayList<String[]>();
+    
+    /**
+     * Thread-safe function to handle the download
+     * Putting a thread is way more effective than following this: https://stackoverflow.com/questions/25093546/android-os-networkonmainthreadexception-at-android-os-strictmodeandroidblockgua
+     * Simply looking at https://developer.android.com/reference/android/os/StrictMode it's recommended Thread or AsyncTask over StrictMode
+     */
+    public void csvParser()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                csvParser_Base();
+                
+            }
+        }).start();
+    }
+    
+    
+    /**
+     * Function based on https://stackoverflow.com/questions/4120942/programatically-downloading-csv-files-with-java
+     * This function is NOT thread safe. In order to run it correctly it needs to be put in a thread
+     */
+    private void csvParser_Base()
     {
         
         String url_csv = "http://www.dati.salute.gov.it/imgs/C_17_dataset_5_download_itemDownload0_upFile.CSV";
@@ -46,56 +72,34 @@ class parseCSVfromURL
             url = new URL(url_csv);
             InputStream in = url.openStream();
             Reader reader = new InputStreamReader(in, "UTF-8");
-            
-            
+    
             //https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVParser.html
             //https://www.callicoder.com/java-read-write-csv-file-apache-commons-csv/
             CSVParser parser = new CSVParser(reader,
-                                             CSVFormat.EXCEL.withHeader( //Permette di non caricare tutto il file ma solo le colonne indicate
-                                                     "INDIRIZZO", "DESCRIZIONEFARMACIA", "PARTITAIVA", "DESCRIZIONECOMUNE",
-                                                     "FRAZIONE", "DESCRIZIONEPROVINCIA", "DESCRIZIONEREGIONE",
-                                                     "DATAINIZIOVALIDITA", "DATAFINEVALIDITA", "LATITUDINE", "LONGITUDINE"
-                                             ));
-            String indirizzo, descFarmacia, partitaIVA, descComune, frazione, descProvincia, descRegione, inizioAttivita;
-            String latitudine, longitudine;
+                                             CSVFormat.EXCEL
+                                                     .withDelimiter(';') //Because italian government SUCKS
+                                                     .withHeader()
+                                                     .withFirstRecordAsHeader() //Returns a new CSVFormat using the first record as header
+                                                     .withIgnoreEmptyLines() //Returns a new CSVFormat with the "empty line skipping" behavior of the format set to true
+            );
             
-            ArrayList<String[]> farmacie = new ArrayList<String[]>();
-            String farmacia[] = new String[10];
             for(CSVRecord record : parser)
             {
-                if(record.get("DATAFINEVALIDITA").equals("-")) //indica una farmacia non chiusa
-                {
-//                    indirizzo       = record.get("INDIRIZZO");
-//                    descFarmacia    = record.get("DESCRIZIONEFARMACIA");
-//                    partitaIVA      = record.get("PARTITAIVA");
-//                    descComune      = record.get("DESCRIZIONECOMUNE");
-//                    frazione        = record.get("FRAZIONE");
-//                    descProvincia   = record.get("DESCRIZIONEPROVINCIA");
-//                    descRegione     = record.get("DESCRIZIONEREGIONE");
-//                    inizioAttivita  = record.get("DATAINIZIOVALIDITA");
-//                    latitudine      = record.get("LATITUDINE");
-//                    longitudine     = record.get("LONGITUDINE");
+                //DEBUG ONLY
+//                try
+//                {
+//                    if(Integer.parseInt(record.get(0))%1000 == 0)
+//                    {
+//                        System.out.println("FATTI 500 RECORDS!!! " + record.get(0));
+//                    }
+//                }
+//                catch(NumberFormatException e) { }
     
-                    farmacia[0] = record.get("INDIRIZZO");
-                    farmacia[1] = record.get("DESCRIZIONEFARMACIA");
-                    farmacia[2] = record.get("PARTITAIVA");
-                    farmacia[3] = record.get("DESCRIZIONECOMUNE");
-                    farmacia[4] = record.get("FRAZIONE");
-                    farmacia[5] = record.get("DESCRIZIONEPROVINCIA");
-                    farmacia[6] = record.get("DESCRIZIONEREGIONE");
-                    farmacia[7] = record.get("DATAINIZIOVALIDITA");
-                    farmacia[8] = record.get("LATITUDINE");
-                    farmacia[9] = record.get("LONGITUDINE");
-                    
-                    farmacie.add(farmacia);
-                }
+                safeExcelReader(record);
             }
             parser.close();
             reader.close();
-            
-            //e qui usare l'arraylist per salvare tutto nel DB
-    
-    
+            saveToDB();
         }
         catch(Exception e)
         {
@@ -105,6 +109,76 @@ class parseCSVfromURL
     
     
     /**
+     * Parse each record and save it to a temporary array
+     * This function will totally IGNORE the error on Excel line 26587, index 12045, and will just
+     * proceed to the next record.
+     * @param record Current Excel line to save
+     * @return an array containing the necessary details to save
+     */
+    private void safeExcelReader(CSVRecord record)
+    {
+        String farmacia[] = new String[10];
+        try
+        {
+            if(record.get(15).equals("-")) //DATAFINEVALIDITA == "-" indica una farmacia non chiusa
+            {
+                farmacia[0] = record.get(2); //INDIRIZZO
+                farmacia[1] = record.get(3); //DESCRIZIONEFARMACIA
+                farmacia[2] = record.get(4); //PARTITAIVA
+                farmacia[3] = record.get(7); //DESCRIZIONECOMUNE
+                farmacia[4] = record.get(8); //FRAZIONE
+                farmacia[5] = record.get(11);//DESCRIZIONEPROVINCIA
+                farmacia[6] = record.get(12);//CODICEREGIONE
+                farmacia[7] = record.get(14);//DATAINIZIOVALIDITA
+                farmacia[8] = record.get(18);//LATITUDINE
+                farmacia[9] = record.get(19);//LONGITUDINE
+                
+                farmacie.add(farmacia);
+            }
+        }
+        catch(ArrayIndexOutOfBoundsException e)
+        {
+            //System.out.println("Ultimo indice fatto = " + record.get(0));
+            
+            //Line 26587 (record.get(0) = 12045) presents an error and throws a ArrayIndexOutOfBoundsException
+            
+            //Why not an IF() ELSE()? Because we have a LOT of data to analyze and adding a new
+            //instruction to check for each record would slow down the whole process
+            //In this way we just skip the record. I'm sorry for that.
+        }
+    }
+    
+    
+    /**
+     * Save the ArrayList into the DB
+     */
+    private void saveToDB()
+    {
+        System.out.println("Farmacie totali = " + farmacie.size());
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * UNUSED ---
      * This method uses Java NIO library to optimize the download
      * It enables multi-threading operations and works in background
      */
@@ -128,28 +202,12 @@ class parseCSVfromURL
         }
         
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
-    
-    
 
 
+/**
+ * UNUSED ---
+ */
 class downloadExcel extends AsyncTask<URL, Integer, Long>
 {
     //https://stackabuse.com/how-to-download-a-file-from-a-url-in-java/

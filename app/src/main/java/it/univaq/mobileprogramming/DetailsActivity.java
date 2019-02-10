@@ -12,9 +12,11 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        //These values will be the user clicked item on the previous View
         String cityName = getIntent().getStringExtra("cityName");
         String regionName = getIntent().getStringExtra("regionName");
 
+        //Link values to XML layout
         TextView textCityName = findViewById(R.id.details_city_name);
         TextView textRegionName = findViewById(R.id.details_region_name);
 
