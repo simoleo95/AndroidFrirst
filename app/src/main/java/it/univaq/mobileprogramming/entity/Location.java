@@ -1,22 +1,22 @@
-package it.univaq.mobileprogramming;
+package it.univaq.mobileprogramming.entity;
 
 
-public class Location
+public class Location //TODO: QUESTA CLASSE DEVE ESSER RIMOSSA PERCHè SOSTITUITA DA E_Farmacia
 {
     private String indirizzo;
-    private int cap;
-    private int codComuneISTAT;
+    private String cap;
+    private String codComuneISTAT;
     private String comune;
     private String frazione;
-    private int codProvinciaISTAT;
+    private String codProvinciaISTAT;
     private String siglaProvincia;
     private String descProvincia;
-    private int codRegione;
+    private String codRegione;
     private String descRegione;
     
-    private float latitudine;
-    private float longitudine;
-    private int localize;
+    private String latitudine;
+    private String longitudine;
+    private String localize;
     
     
     //Basic constructor
@@ -26,39 +26,26 @@ public class Location
     
     
     /**
+     * Short constructor enabling to set fundamental details only
      *
      * @param indirizzo
-     * @param cap
-     * @param codComuneISTAT
      * @param comune
      * @param frazione
-     * @param codProvinciaISTAT
-     * @param siglaProvincia
      * @param descProvincia
-     * @param codRegione
      * @param descRegione
      * @param latitudine
      * @param longitudine
-     * @param localize
      */
-    public Location(String indirizzo, int cap, int codComuneISTAT, String comune,
-                    String frazione, int codProvinciaISTAT, String siglaProvincia,
-                    String descProvincia, int codRegione, String descRegione, float latitudine,
-                    float longitudine, int localize)
+    public Location(String indirizzo, String comune, String frazione, String descProvincia,
+                    String descRegione, String latitudine, String longitudine)
     {
         this.indirizzo = indirizzo;
-        this.cap = cap;
-        this.codComuneISTAT = codComuneISTAT;
         this.comune = comune;
         this.frazione = frazione;
-        this.codProvinciaISTAT = codProvinciaISTAT;
-        this.siglaProvincia = siglaProvincia;
         this.descProvincia = descProvincia;
-        this.codRegione = codRegione;
         this.descRegione = descRegione;
         this.latitudine = latitudine;
         this.longitudine = longitudine;
-        this.localize = localize;
     }
     
     
@@ -72,22 +59,22 @@ public class Location
         this.indirizzo = indirizzo;
     }
     
-    public int getCap()
+    public String getCap()
     {
         return cap;
     }
     
-    public void setCap(int cap)
+    public void setCap(String cap)
     {
         this.cap = cap;
     }
     
-    public int getCodComuneISTAT()
+    public String getCodComuneISTAT()
     {
         return codComuneISTAT;
     }
     
-    public void setCodComuneISTAT(int codComuneISTAT)
+    public void setCodComuneISTAT(String codComuneISTAT)
     {
         this.codComuneISTAT = codComuneISTAT;
     }
@@ -112,12 +99,12 @@ public class Location
         this.frazione = frazione;
     }
     
-    public int getCodProvinciaISTAT()
+    public String getCodProvinciaISTAT()
     {
         return codProvinciaISTAT;
     }
     
-    public void setCodProvinciaISTAT(int codProvinciaISTAT)
+    public void setCodProvinciaISTAT(String codProvinciaISTAT)
     {
         this.codProvinciaISTAT = codProvinciaISTAT;
     }
@@ -142,12 +129,12 @@ public class Location
         this.descProvincia = descProvincia;
     }
     
-    public int getCodRegione()
+    public String getCodRegione()
     {
         return codRegione;
     }
     
-    public void setCodRegione(int codRegione)
+    public void setCodRegione(String codRegione)
     {
         this.codRegione = codRegione;
     }
@@ -162,32 +149,32 @@ public class Location
         this.descRegione = descRegione;
     }
     
-    public float getLatitudine()
+    public String getLatitudine()
     {
         return latitudine;
     }
     
-    public void setLatitudine(float latitudine)
+    public void setLatitudine(String latitudine)
     {
         this.latitudine = latitudine;
     }
     
-    public float getLongitudine()
+    public String getLongitudine()
     {
         return longitudine;
     }
     
-    public void setLongitudine(float longitudine)
+    public void setLongitudine(String longitudine)
     {
         this.longitudine = longitudine;
     }
     
-    public int getLocalize()
+    public String getLocalize()
     {
         return localize;
     }
     
-    public void setLocalize(int localize)
+    public void setLocalize(String localize)
     {
         this.localize = localize;
     }

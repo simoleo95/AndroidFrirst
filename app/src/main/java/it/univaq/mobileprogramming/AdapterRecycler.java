@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import it.univaq.mobileprogramming.entity.Farmacia;
+
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder>
 {
     

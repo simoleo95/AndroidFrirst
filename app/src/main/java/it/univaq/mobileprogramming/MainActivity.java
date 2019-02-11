@@ -1,31 +1,12 @@
 package it.univaq.mobileprogramming;
 
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.android.volley.Network;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.net.URL;
-import java.io.File;
-import java.net.MalformedURLException;
+import it.univaq.mobileprogramming.entity.Farmacia;
+import it.univaq.mobileprogramming.entity.Location;
 
 public class MainActivity extends AppCompatActivity // <- to ensure backward compability
 {
