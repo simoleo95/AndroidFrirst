@@ -10,7 +10,7 @@ import it.univaq.mobileprogramming.entity.E_Farmacia;
 @Database(entities = {E_Farmacia.class}, version = 1)
 public abstract class D_Database extends RoomDatabase
 {
-    public abstract D_Farmacia getD_Farmacia();
+    public abstract D_Farmacia D_Farmacia_Model();
     
     //Instantiate the database with a Singleton Pattern in order to keep only 1 instance active at time
     private static D_Database instance = null;

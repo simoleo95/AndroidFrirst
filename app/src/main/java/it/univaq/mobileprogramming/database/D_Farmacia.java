@@ -10,7 +10,9 @@ import java.util.List;
 
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 
-@Dao //Contains the methods used for accessing the database.
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
+
+@Dao //Data Access Object - Contains the methods used for accessing the database.
 public interface D_Farmacia
 {
     //Why Room Database?
@@ -19,7 +21,7 @@ public interface D_Farmacia
     //https://developer.android.com/training/data-storage/room/accessing-data
     //Reactive Queries
     
-    @Insert
+    @Insert(onConflict = REPLACE)
     public void insertThis(E_Farmacia farmacia);
     
     

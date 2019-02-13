@@ -46,6 +46,7 @@ public class E_Farmacia
     @ColumnInfo(name = "preferito")
     private byte preferito;
     
+    public E_Farmacia(){}
     
     public E_Farmacia(long id, String indirizzo, String farmacia, String iva, String comune,
                       String frazione, String provincia, String regione, String data_inizio,
