@@ -9,7 +9,9 @@ import android.arch.persistence.room.PrimaryKey;
 public class E_Farmacia
 {
     
-    @PrimaryKey(autoGenerate = true)
+//    @PrimaryKey(autoGenerate = true)
+//    private long id;
+    @PrimaryKey @ColumnInfo(name = "id")
     private long id;
     
     //POJO - Plain Old Java Object
@@ -47,6 +49,41 @@ public class E_Farmacia
     private byte preferito;
     
     public E_Farmacia(){}
+    
+    public E_Farmacia(String indirizzo, String farmacia, String iva, String comune,
+                      String frazione, String provincia, String regione, String data_inizio,
+                      String latitudine, String longitudine)
+    {
+        this.indirizzo = indirizzo;
+        this.farmacia = farmacia;
+        this.iva = iva;
+        this.comune = comune;
+        this.frazione = frazione;
+        this.provincia = provincia;
+        this.regione = regione;
+        this.data_inizio = data_inizio;
+        this.latitudine = latitudine;
+        this.longitudine = longitudine;
+        this.preferito = 0;
+    }
+    
+    public E_Farmacia(long id, String indirizzo, String farmacia, String iva, String comune,
+                      String frazione, String provincia, String regione, String data_inizio,
+                      String latitudine, String longitudine)
+    {
+        this.id = id;
+        this.indirizzo = indirizzo;
+        this.farmacia = farmacia;
+        this.iva = iva;
+        this.comune = comune;
+        this.frazione = frazione;
+        this.provincia = provincia;
+        this.regione = regione;
+        this.data_inizio = data_inizio;
+        this.latitudine = latitudine;
+        this.longitudine = longitudine;
+        this.preferito = 0;
+    }
     
     public E_Farmacia(long id, String indirizzo, String farmacia, String iva, String comune,
                       String frazione, String provincia, String regione, String data_inizio,

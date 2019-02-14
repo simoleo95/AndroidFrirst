@@ -5,18 +5,26 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.Farmacia;
 import it.univaq.mobileprogramming.entity.Location;
 
 public class MainActivity extends AppCompatActivity // <- to ensure backward compability
 {
 
+    private D_Database roomDB;
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Link this class(context) to a specific XML (activity_main)
 
+        
+        
+        
+        
 //        Location[] data = new Location[4];
 //        Farmacia[] farmacia = new Farmacia[2];
 //
@@ -124,8 +132,8 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
     
     
         System.out.println("Qui dovresti esserci");
-        ParseCSVfromURL f = new ParseCSVfromURL();
-        f.csvParser();
+        Download d = new Download(this);
+        d.csvParser();
         System.out.println("Ho finito tutto...");
         
         
@@ -153,7 +161,6 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
         
         farmacia[0]=f1;
         farmacia[1]=f2;
-        System.out.println("Ho impostato i nomi per le farmacie");
 
         // Adapter adapter = new Adapter(data);
         AdapterRecycler adapter = new AdapterRecycler(farmacia);
@@ -165,4 +172,12 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
         list.setAdapter(adapter);
     }
     
+    
+    
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        D_Database.closeConnection();
+    }
 }

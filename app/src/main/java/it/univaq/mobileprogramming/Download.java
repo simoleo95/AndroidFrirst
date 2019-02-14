@@ -1,43 +1,36 @@
 package it.univaq.mobileprogramming;
 
 
-import android.animation.FloatArrayEvaluator;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.support.annotation.FloatRange;
-import android.util.Log;
+import android.content.Context;
+import android.media.effect.Effect;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.channels.Channel;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.csv.CSVFormat.EXCEL;
+import it.univaq.mobileprogramming.database.D_Database;
+import it.univaq.mobileprogramming.entity.E_Farmacia;
 
 
-class ParseCSVfromURL
+class Download
 {
     //All the pharmacies found in the Excel file
     private ArrayList<String[]> farmacie = new ArrayList<String[]>();
+    
+    D_Database roomDB;
+    
+    public Download(Context context)
+    {
+        roomDB = D_Database.getInstance(context);
+    }
+    
     
     /**
      * Thread-safe function to handle the download
@@ -51,9 +44,12 @@ class ParseCSVfromURL
             @Override
             public void run()
             {
+                roomDB.clearAllTables();
                 csvParser_Base();
+                System.out.println("Fine run thread!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             }
         }).start();
+        System.out.println("Fine DI TUTTO IL thread£££££££££££££££££££££££££££££");
     }
     
     
@@ -80,35 +76,53 @@ class ParseCSVfromURL
                                                      .withFirstRecordAsHeader() //Returns a new CSVFormat using the first record as header
                                                      .withIgnoreEmptyLines() //Returns a new CSVFormat with the "empty line skipping" behavior of the format set to true
             );
-            
-            
-            //ToDo: APRI CONNESSIONE PERMANENTE AL DB - - - - - - - - - - - - - - - - - - - - - - -
-            
-            
             for(CSVRecord record : parser)
             {
-                //DEBUG ONLY
-//                try
-//                {
-//                    if(Integer.parseInt(record.get(0))%1000 == 0)
-//                    {
-//                        System.out.println("FATTI 500 RECORDS!!! " + record.get(0));
-//                    }
-//                }
-//                catch(NumberFormatException e) { }
+//                safeExcelReaderToArray(record);
                 safeExcelReader(record);
-                //ToDO: SALVA RECORD SUL DB - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             }
             parser.close();
             reader.close();
-    
-            
-            //ToDo: CHIUDI CONNESSIONE PERMANENTE AL DB - - - - - - - - - - - - - - - - - - - - - -
+            System.out.println("Io ho finito il parsing!");
+            showRecords();
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+    }
+    
+    private void showRecords()
+    {
+        List<E_Farmacia> EF1 = roomDB.D_Farmacia_Access().getAllPharmaciesIn("TORINO");
+        int max = 15;
+        for(int i = 0; i < max; i++)
+        {
+            showF(EF1, i);
+    
+        }
+        int sizeF = EF1.size();
+        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+        System.out.println("Total pharms now = " + sizeF);
+        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+        for(int i = 0; i < max; i++)
+        {
+            showF(EF1, sizeF - 5 + i);
+        
+        }
+        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+    }
+    
+    private void showF(List<E_Farmacia> EF1, int i)
+    {
+        System.out.println("i = " + i + "\n ID = " + EF1.get(i).getId() +
+                                   ", Indirizzo: " + EF1.get(i).getIndirizzo() +
+                                   ", Comune: " + EF1.get(i).getComune() +
+                                   ", IVA: " + EF1.get(i).getIva() +
+                                   ", Lat: " + EF1.get(i).getLatitudine());
     }
     
     
@@ -121,10 +135,76 @@ class ParseCSVfromURL
      */
     private void safeExcelReader(CSVRecord record)
     {
+        try
+        {
+            if(record.get(15).equals("-") //DATAFINEVALIDITA == "-" indica una farmacia non chiusa
+                    && (!record.get(0).equals("0") //Often it will wrongly read a "0"
+                        || !record.get(0).equals("null"))) //or "null" value so we want to discard these records
+            {
+                E_Farmacia f = new E_Farmacia(
+                        Long.parseLong(record.get(0)),//ID
+                        record.get(2), //INDIRIZZO
+                        record.get(3), //DESCRIZIONEFARMACIA
+                        record.get(4), //PARTITAIVA
+                        record.get(7), //DESCRIZIONECOMUNE
+                        record.get(8), //FRAZIONE
+                        record.get(11),//DESCRIZIONEPROVINCIA
+                        record.get(13),//DESCRIZIONEREGIONE
+                        record.get(14),//DATAINIZIOVALIDITA
+                        record.get(18),//LATITUDINE
+                        record.get(19) //LONGITUDINE
+                );
+                roomDB.D_Farmacia_Access()
+                        .insertThis(f);
+            }
+        }
+        catch(ArrayIndexOutOfBoundsException e)
+        {
+            //System.out.println("Ultimo indice fatto = " + record.get(0));
+            
+            //Line 26587 (record.get(0) = 12045) presents an error and throws a ArrayIndexOutOfBoundsException
+            
+            //Why not an IF() ELSE()? Because we have a LOT of data to analyze and adding a new
+            //instruction to check for each record would slow down the whole process
+            
+            //In this way we just hardcode it here
+            E_Farmacia f = new E_Farmacia(
+                    Long.parseLong("12045"),//ID
+                    "Via Passanti, 176/178", //INDIRIZZO
+                    "Farmacia D'Ambrosio Fernanda S.n.c. Dei Dott.ri D'Ambrosio Fernanda E Cerciello Francesco Claudio", //DESCRIZIONEFARMACIA
+                    "8978851213", //PARTITAIVA
+                    "SAN GIUSEPPE VESUVIANO", //DESCRIZIONECOMUNE
+                    "-", //FRAZIONE
+                    "NAPOLI",//DESCRIZIONEPROVINCIA
+                    "CAMPANIA",//DESCRIZIONEREGIONE
+                    "01/11/2018",//DATAINIZIOVALIDITA
+                    "40,8275996228434",//LATITUDINE
+                    "14,5041034840709" //LONGITUDINE
+            );
+            roomDB.D_Farmacia_Access()
+                .insertThis(f);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    /**
+     * Parse each record and save it to a temporary array
+     * This function will totally IGNORE the error on Excel line 26587, index 12045, and will just
+     * proceed to the next record.
+     * @param record Current Excel line to save
+     * @return an array containing the necessary details to save
+     */
+    private void safeExcelReaderToArray(CSVRecord record)
+    {
         String farmacia[] = new String[11];
         try
         {
-            if(record.get(15).equals("-")) //DATAFINEVALIDITA == "-" indica una farmacia non chiusa
+            if(record.get(15).equals("-") && record.get(0) != null) //DATAFINEVALIDITA == "-" indica una farmacia non chiusa
             {
                 farmacia[0] = record.get(0); //ID
                 farmacia[1] = record.get(2); //INDIRIZZO
@@ -161,6 +241,13 @@ class ParseCSVfromURL
             farmacia[9] = "40,8275996228434";//LATITUDINE
             farmacia[10]= "14,5041034840709";//LONGITUDINE
         }
+//        for(int i = 0; i < 11; i++)
+//        {
+//            System.out.print(farmacia[i]);
+//            System.out.print(", ");
+//        }
+//        System.out.print(" - - - - - - -- -- - - - - - - - - - -  -\n\n\n");
+       
         this.farmacie.add(farmacia);
     }
     
@@ -173,107 +260,4 @@ class ParseCSVfromURL
         System.out.println("Farmacie totali = " + this.farmacie.size());
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /**
-     * UNUSED ---
-     * This method uses Java NIO library to optimize the download
-     * It enables multi-threading operations and works in background
-     */
-    public void try_3()
-    {
-        //https://stackabuse.com/how-to-download-a-file-from-a-url-in-java/
-        try
-        {
-            String csv_url = "http://www.dati.salute.gov.it/imgs/C_17_dataset_5_download_itemDownload0_upFile.CSV";
-            URL url = new URL(csv_url);
-            InputStream in = url.openStream();
-            ReadableByteChannel read = Channels.newChannel(in);
-            
-            FileOutputStream out = new FileOutputStream("./excel.csv");
-            FileChannel write = out.getChannel();
-            write.transferFrom(read, 0, Long.MAX_VALUE);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        
-    }
-}
-
-
-/**
- * UNUSED ---
- */
-class downloadExcel extends AsyncTask<URL, Integer, Long>
-{
-    //https://stackabuse.com/how-to-download-a-file-from-a-url-in-java/
-    @Override
-    protected Long doInBackground(URL... excelFile)
-    {
-        try
-        {
-            File saveHere = new File(Environment.getExternalStorageDirectory() + "/Excel Data");
-            if(!saveHere.exists())
-            {
-                saveHere.mkdir();
-            }
-    
-            String excel = "http://www.dati.salute.gov.it/imgs/C_17_dataset_5_download_itemDownload0_upFile.CSV";
-            URL url = null;
-            try
-            {
-                url = new URL(excel);
-            }
-            catch(MalformedURLException e)
-            {
-                Log.e("URL error: ", e.getMessage());
-            }
-    
-            URLConnection connection = url.openConnection();
-            connection.connect();
-    
-            //Save the file
-            InputStream in = new BufferedInputStream(url.openStream(), 8192*2);
-            
-            //Strategy #1 - https://www.baeldung.com/java-download-file
-            OutputStream out = new FileOutputStream(saveHere + "excel.csv");
-            
-            byte saveByte[] = new byte[1024];
-            int c;
-            while((c = in.read(saveByte)) != -1)
-            {
-                out.write(saveByte, 0, c);
-            }
-            out.flush();
-            out.close();
-            in.close();
-    
-        }
-        catch(Exception e)
-        {
-            Log.e("Error occurred: ", e.getMessage());
-        }
-        
-        return null;
-    }
 }

@@ -40,8 +40,8 @@ dependencies {
     //RoomDatabase
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
-
-    //Reactive queries with RxJava - RoomDatabase
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha02'
+//
+//    //Reactive queries with RxJava - RoomDatabase
+//    implementation 'androidx.room:room-rxjava2:2.1.0-alpha02'
 
 }

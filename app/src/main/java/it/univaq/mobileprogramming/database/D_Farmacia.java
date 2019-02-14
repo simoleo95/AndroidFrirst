@@ -33,19 +33,21 @@ public interface D_Farmacia
     public void updateThis(E_Farmacia farmacia);
     
     
+    //Retrieve all the pharmacies in the same Comune as the user
     @Query("SELECT * FROM farmacie WHERE comune = :comune")
     //public E_Farmacia getAllPharmaciesIn(String comune);
     public List<E_Farmacia> getAllPharmaciesIn(String comune);
     
     
+    //Get all the user favourite pharmacies
     @Query("SELECT * FROM farmacie WHERE preferito = :preferito")
     //public E_Farmacia getPreferiti(byte preferito);
-    public List<E_Farmacia> getPreferiti(byte preferito);
+    public List<E_Farmacia> getUserFavourites(byte preferito);
     
     
     
-    
-    
+    @Query("SELECT * FROM farmacie WHERE id = :id")
+    public E_Farmacia getPharmacyWith_ID(long id);
     
     
     
