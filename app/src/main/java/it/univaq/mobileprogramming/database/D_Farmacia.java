@@ -45,14 +45,14 @@ public interface D_Farmacia
     public List<E_Farmacia> getUserFavourites(byte preferito);
     
     
-    
+    //Get a specific pharmacy by its ID
     @Query("SELECT * FROM farmacie WHERE id = :id")
     public E_Farmacia getPharmacyWith_ID(long id);
     
     
     
-    
-    
+    @Query("SELECT * FROM farmacie")
+    public List<E_Farmacia> getAll();
     
     
     

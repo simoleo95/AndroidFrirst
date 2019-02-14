@@ -44,7 +44,6 @@ class Download
             @Override
             public void run()
             {
-                roomDB.clearAllTables();
                 csvParser_Base();
                 System.out.println("Fine run thread!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             }
@@ -66,6 +65,7 @@ class Download
             url = new URL(url_csv);
             InputStream in = url.openStream();
             Reader reader = new InputStreamReader(in, "UTF-8");
+            
     
             //https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVParser.html
             //https://www.callicoder.com/java-read-write-csv-file-apache-commons-csv/
@@ -76,6 +76,12 @@ class Download
                                                      .withFirstRecordAsHeader() //Returns a new CSVFormat using the first record as header
                                                      .withIgnoreEmptyLines() //Returns a new CSVFormat with the "empty line skipping" behavior of the format set to true
             );
+            
+            int totRecs = roomDB.D_Farmacia_Access().getAll().size();
+            System.out.println("Tot recs = " + totRecs);
+            E_Farmacia f0 = roomDB.D_Farmacia_Access().getPharmacyWith_ID(1);
+            System.out.println("1) - Farmacia con ID = " + f0.getId() + ", via: " + f0.getIndirizzo() + ", " + f0.getFarmacia());
+            
             for(CSVRecord record : parser)
             {
 //                safeExcelReaderToArray(record);
@@ -84,7 +90,6 @@ class Download
             parser.close();
             reader.close();
             System.out.println("Io ho finito il parsing!");
-            showRecords();
         }
         catch(Exception e)
         {
