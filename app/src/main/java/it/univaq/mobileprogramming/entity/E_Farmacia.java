@@ -2,16 +2,20 @@ package it.univaq.mobileprogramming.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import it.univaq.mobileprogramming.database.D_Database;
 
+
+/**
+ * Sets all the necessary parameters for a new Pharmacy
+ */
 @Entity(tableName = "farmacie") //Represents a table within the database.
 public class E_Farmacia
 {
-    
-//    @PrimaryKey(autoGenerate = true)
-//    private long id;
-    @PrimaryKey @ColumnInfo(name = "id")
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     private long id;
     
     //POJO - Plain Old Java Object
@@ -45,28 +49,27 @@ public class E_Farmacia
     @ColumnInfo(name = "longitudine")
     private String longitudine;
     
-    @ColumnInfo(name = "preferito")
-    private byte preferito;
-    
-    public E_Farmacia(){}
-    
-    public E_Farmacia(String indirizzo, String farmacia, String iva, String comune,
-                      String frazione, String provincia, String regione, String data_inizio,
-                      String latitudine, String longitudine)
+    @Ignore
+    public E_Farmacia()
     {
-        this.indirizzo = indirizzo;
-        this.farmacia = farmacia;
-        this.iva = iva;
-        this.comune = comune;
-        this.frazione = frazione;
-        this.provincia = provincia;
-        this.regione = regione;
-        this.data_inizio = data_inizio;
-        this.latitudine = latitudine;
-        this.longitudine = longitudine;
-        this.preferito = 0;
     }
     
+    
+    /**
+     * Create a new E_Farmacia without specifying whether it's Favourite or not
+     *
+     * @param id          Excel's row
+     * @param indirizzo   Farmacia's address
+     * @param farmacia    Farmacia's description
+     * @param iva         Partita IVA
+     * @param comune      Farmacia's city location
+     * @param frazione    City's fraction
+     * @param provincia   City's provence
+     * @param regione     City's region
+     * @param data_inizio Farmacia's activity starting date
+     * @param latitudine  Farmacia's geographical lat
+     * @param longitudine Farmacia's geographical lon
+     */
     public E_Farmacia(long id, String indirizzo, String farmacia, String iva, String comune,
                       String frazione, String provincia, String regione, String data_inizio,
                       String latitudine, String longitudine)
@@ -82,26 +85,20 @@ public class E_Farmacia
         this.data_inizio = data_inizio;
         this.latitudine = latitudine;
         this.longitudine = longitudine;
-        this.preferito = 0;
     }
     
-    public E_Farmacia(long id, String indirizzo, String farmacia, String iva, String comune,
-                      String frazione, String provincia, String regione, String data_inizio,
-                      String latitudine, String longitudine, byte preferito)
+    public void setAsFavourite(D_Database room)
     {
-        this.id = id;
-        this.indirizzo = indirizzo;
-        this.farmacia = farmacia;
-        this.iva = iva;
-        this.comune = comune;
-        this.frazione = frazione;
-        this.provincia = provincia;
-        this.regione = regione;
-        this.data_inizio = data_inizio;
-        this.latitudine = latitudine;
-        this.longitudine = longitudine;
-        this.preferito = preferito;
+        E_Preferita pref = new E_Preferita(this.id);
+        room.D_Preferita_Access().setAsFavourite(pref);
     }
+    
+    public void removeFromFavourites(D_Database room)
+    {
+        E_Preferita pref = new E_Preferita(this.id);
+        room.D_Preferita_Access().removeFromFavourite(pref);
+    }
+    
     
     public long getId()
     {
@@ -211,15 +208,5 @@ public class E_Farmacia
     public void setLongitudine(String longitudine)
     {
         this.longitudine = longitudine;
-    }
-    
-    public byte getPreferito()
-    {
-        return preferito;
-    }
-    
-    public void setPreferito(byte preferito)
-    {
-        this.preferito = preferito;
     }
 }

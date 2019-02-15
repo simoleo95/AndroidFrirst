@@ -10,7 +10,7 @@ import java.util.List;
 
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 
-import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE; //https://developer.android.com/reference/android/arch/persistence/room/OnConflictStrategy
 
 @Dao //Data Access Object - Contains the methods used for accessing the database.
 public interface D_Farmacia
@@ -33,34 +33,50 @@ public interface D_Farmacia
     public void updateThis(E_Farmacia farmacia);
     
     
-    //Retrieve all the pharmacies in the same Comune as the user
-    @Query("SELECT * FROM farmacie WHERE comune = :comune")
+    /**
+     * Retrieve all the pharmacies in the same city as the user's
+     *
+     * @param comune user's city
+     * @return a List of all the open pharmacies in the selected city
+     */
+    @Query("SELECT * " +
+           "FROM farmacie " +
+           "WHERE comune = :comune")
     //public E_Farmacia getAllPharmaciesIn(String comune);
     public List<E_Farmacia> getAllPharmaciesIn(String comune);
     
     
-    //Get all the user favourite pharmacies
-    @Query("SELECT * FROM farmacie WHERE preferito = :preferito")
-    //public E_Farmacia getPreferiti(byte preferito);
-    public List<E_Farmacia> getUserFavourites(byte preferito);
-    
-    
-    //Get a specific pharmacy by its ID
-    @Query("SELECT * FROM farmacie WHERE id = :id")
+    /**
+     * Get a specific pharmacy by its ID
+     *
+     * @return E_Farmacia object
+     */
+    @Query("SELECT * " +
+           "FROM farmacie " +
+           "WHERE id = :id")
     public E_Farmacia getPharmacyWith_ID(long id);
     
     
-    
-    @Query("SELECT * FROM farmacie")
+    /**
+     * Retrieve all the pharmacies
+     *
+     * @return a List of all the pharmacies saved in the DB
+     */
+    @Query("SELECT * " +
+           "FROM farmacie")
     public List<E_Farmacia> getAll();
     
     
-    
-    
-    
-    
-    
-    
+    /**
+     * Selects all the user favourite pharmacies
+     *
+     * @return a List of all the user favourite pharmacies
+     */
+    @Query("SELECT * " +
+            "FROM farmacie " +
+            "INNER JOIN preferite " +
+            "ON farmacie.id = preferite.id")
+    public List<E_Farmacia> getAllFavourites();
     
     
     

@@ -17,6 +17,7 @@ import java.util.List;
 
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
+import it.univaq.mobileprogramming.entity.E_Preferita;
 
 
 class Download
@@ -76,12 +77,7 @@ class Download
                                                      .withFirstRecordAsHeader() //Returns a new CSVFormat using the first record as header
                                                      .withIgnoreEmptyLines() //Returns a new CSVFormat with the "empty line skipping" behavior of the format set to true
             );
-            
-            int totRecs = roomDB.D_Farmacia_Access().getAll().size();
-            System.out.println("Tot recs = " + totRecs);
-            E_Farmacia f0 = roomDB.D_Farmacia_Access().getPharmacyWith_ID(1);
-            System.out.println("1) - Farmacia con ID = " + f0.getId() + ", via: " + f0.getIndirizzo() + ", " + f0.getFarmacia());
-            
+             
             for(CSVRecord record : parser)
             {
 //                safeExcelReaderToArray(record);
@@ -133,17 +129,15 @@ class Download
     
     /**
      * Parse each record and save it to a temporary array
-     * This function will totally IGNORE the error on Excel line 26587, index 12045, and will just
-     * proceed to the next record.
+     *
      * @param record Current Excel line to save
-     * @return an array containing the necessary details to save
      */
     private void safeExcelReader(CSVRecord record)
     {
         try
         {
             if(record.get(15).equals("-") //DATAFINEVALIDITA == "-" indica una farmacia non chiusa
-                    && (!record.get(0).equals("0") //Often it will wrongly read a "0"
+                    && (!record.get(0).equals("0") //Often it will wrongly read a "0" (Probably because we have a STREAM of data and records aren't fetched soon enough)
                         || !record.get(0).equals("null"))) //or "null" value so we want to discard these records
             {
                 E_Farmacia f = new E_Farmacia(
@@ -199,10 +193,8 @@ class Download
     
     /**
      * Parse each record and save it to a temporary array
-     * This function will totally IGNORE the error on Excel line 26587, index 12045, and will just
-     * proceed to the next record.
+     *
      * @param record Current Excel line to save
-     * @return an array containing the necessary details to save
      */
     private void safeExcelReaderToArray(CSVRecord record)
     {
@@ -246,23 +238,7 @@ class Download
             farmacia[9] = "40,8275996228434";//LATITUDINE
             farmacia[10]= "14,5041034840709";//LONGITUDINE
         }
-//        for(int i = 0; i < 11; i++)
-//        {
-//            System.out.print(farmacia[i]);
-//            System.out.print(", ");
-//        }
-//        System.out.print(" - - - - - - -- -- - - - - - - - - - -  -\n\n\n");
        
         this.farmacie.add(farmacia);
     }
-    
-    
-    /**
-     * Save the ArrayList into the DB
-     */
-    private void saveToDB()
-    {
-        System.out.println("Farmacie totali = " + this.farmacie.size());
-    }
-    
 }

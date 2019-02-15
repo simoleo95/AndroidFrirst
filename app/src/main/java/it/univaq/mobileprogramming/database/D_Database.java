@@ -6,13 +6,19 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import it.univaq.mobileprogramming.entity.E_Farmacia;
+import it.univaq.mobileprogramming.entity.E_Preferita;
 
-@Database(entities = {E_Farmacia.class}, version = 2)
+@Database(entities = {E_Farmacia.class,
+                      E_Preferita.class},
+          version = 1)
 public abstract class D_Database extends RoomDatabase
 {
     //This object is meant to be used via D_Database object.
     //Acting in this way we'll create a DB instance and access all his tables + methods
     public abstract D_Farmacia D_Farmacia_Access();
+    
+    public abstract D_Preferita D_Preferita_Access();
+    
     
     //Instantiate the database with a Singleton Pattern in order to keep only 1 instance active at time
     private static D_Database instance = null;
