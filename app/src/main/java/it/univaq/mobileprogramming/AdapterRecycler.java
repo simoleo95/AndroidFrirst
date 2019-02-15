@@ -32,7 +32,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     }
     
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i)
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) //https://stackoverflow.com/questions/37523308/when-onbindviewholder-is-called-and-how-it-works/37524217
     {
         //This function will ITERATE itself on EACH element present in farmacia[] array
         Farmacia farmacia = data[i];

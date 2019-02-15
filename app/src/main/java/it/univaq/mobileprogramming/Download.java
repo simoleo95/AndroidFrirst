@@ -22,9 +22,6 @@ import it.univaq.mobileprogramming.entity.E_Preferita;
 
 class Download
 {
-    //All the pharmacies found in the Excel file
-    private ArrayList<String[]> farmacie = new ArrayList<String[]>();
-    
     D_Database roomDB;
     
     public Download(Context context)
@@ -38,7 +35,7 @@ class Download
      * Putting a thread is way more effective than following this: https://stackoverflow.com/questions/25093546/android-os-networkonmainthreadexception-at-android-os-strictmodeandroidblockgua
      * Simply looking at https://developer.android.com/reference/android/os/StrictMode it's recommended Thread or AsyncTask over StrictMode
      */
-    public void csvParser()
+    public void saveToDB()
     {
         new Thread(new Runnable()
         {
@@ -46,10 +43,8 @@ class Download
             public void run()
             {
                 csvParser_Base();
-                System.out.println("Fine run thread!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             }
         }).start();
-        System.out.println("Fine DI TUTTO IL thread£££££££££££££££££££££££££££££");
     }
     
     
@@ -77,15 +72,13 @@ class Download
                                                      .withFirstRecordAsHeader() //Returns a new CSVFormat using the first record as header
                                                      .withIgnoreEmptyLines() //Returns a new CSVFormat with the "empty line skipping" behavior of the format set to true
             );
-             
+            
             for(CSVRecord record : parser)
             {
-//                safeExcelReaderToArray(record);
                 safeExcelReader(record);
             }
-            parser.close();
+            parser.close(); //Parsing is DONE
             reader.close();
-            System.out.println("Io ho finito il parsing!");
         }
         catch(Exception e)
         {
@@ -187,58 +180,5 @@ class Download
         {
             e.printStackTrace();
         }
-    }
-    
-    
-    
-    /**
-     * Parse each record and save it to a temporary array
-     *
-     * @param record Current Excel line to save
-     */
-    private void safeExcelReaderToArray(CSVRecord record)
-    {
-        String farmacia[] = new String[11];
-        try
-        {
-            if(record.get(15).equals("-") && record.get(0) != null) //DATAFINEVALIDITA == "-" indica una farmacia non chiusa
-            {
-                farmacia[0] = record.get(0); //ID
-                farmacia[1] = record.get(2); //INDIRIZZO
-                farmacia[2] = record.get(3); //DESCRIZIONEFARMACIA
-                farmacia[3] = record.get(4); //PARTITAIVA
-                farmacia[4] = record.get(7); //DESCRIZIONECOMUNE
-                farmacia[5] = record.get(8); //FRAZIONE
-                farmacia[6] = record.get(11);//DESCRIZIONEPROVINCIA
-                farmacia[7] = record.get(13);//DESCRIZIONEREGIONE
-                farmacia[8] = record.get(14);//DATAINIZIOVALIDITA
-                farmacia[9] = record.get(18);//LATITUDINE
-                farmacia[10]= record.get(19);//LONGITUDINE
-            }
-        }
-        catch(ArrayIndexOutOfBoundsException e)
-        {
-            //System.out.println("Ultimo indice fatto = " + record.get(0));
-            
-            //Line 26587 (record.get(0) = 12045) presents an error and throws a ArrayIndexOutOfBoundsException
-            
-            //Why not an IF() ELSE()? Because we have a LOT of data to analyze and adding a new
-            //instruction to check for each record would slow down the whole process
-            
-            //In this way we just hardcode it here
-            farmacia[0] = "12045"; //ID
-            farmacia[1] = "Via Passanti, 176/178"; //INDIRIZZO
-            farmacia[2] = "Farmacia D'Ambrosio Fernanda S.n.c. Dei Dott.ri D'Ambrosio Fernanda E Cerciello Francesco Claudio"; //DESCRIZIONEFARMACIA
-            farmacia[3] = "8978851213"; //PARTITAIVA
-            farmacia[4] = "SAN GIUSEPPE VESUVIANO"; //DESCRIZIONECOMUNE
-            farmacia[5] = "-"; //FRAZIONE
-            farmacia[6] = "NAPOLI";//DESCRIZIONEPROVINCIA
-            farmacia[7] = "CAMPANIA";//DESCRIZIONEREGIONE
-            farmacia[8] = "01/11/2018";//DATAINIZIOVALIDITA
-            farmacia[9] = "40,8275996228434";//LATITUDINE
-            farmacia[10]= "14,5041034840709";//LONGITUDINE
-        }
-       
-        this.farmacie.add(farmacia);
     }
 }

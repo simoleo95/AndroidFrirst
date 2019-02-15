@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
     
         System.out.println("Qui dovresti esserci");
         Download d = new Download(this);
-        d.csvParser();
+        d.saveToDB();
         System.out.println("Ho finito tutto...");
         
         

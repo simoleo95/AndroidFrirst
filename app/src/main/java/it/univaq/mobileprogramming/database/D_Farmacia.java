@@ -73,49 +73,8 @@ public interface D_Farmacia
      * @return a List of all the user favourite pharmacies
      */
     @Query("SELECT * " +
-            "FROM farmacie " +
-            "INNER JOIN preferite " +
-            "ON farmacie.id = preferite.id")
+           "FROM farmacie " +
+           "INNER JOIN preferite " +
+           "ON farmacie.id = preferite.id")
     public List<E_Farmacia> getAllFavourites();
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
