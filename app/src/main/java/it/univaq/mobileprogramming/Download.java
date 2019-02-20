@@ -2,7 +2,10 @@ package it.univaq.mobileprogramming;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.effect.Effect;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -22,11 +25,18 @@ import it.univaq.mobileprogramming.entity.E_Preferita;
 
 class Download
 {
-    D_Database roomDB;
+    private Context context;
+    private D_Database roomDB;
+    private MyReceiver receiveIntent;
+    private static String broadcastAction = BuildConfig.APPLICATION_ID + ".CUSTOM_BROADCAST_ACTION";
     
     public Download(Context context)
     {
+        this.context = context;
         roomDB = D_Database.getInstance(context);
+        
+        //Register the Intent Broadcast receiver
+        this.registerReceiver();
     }
     
     
@@ -42,7 +52,11 @@ class Download
             @Override
             public void run()
             {
-                csvParser_Base();
+                System.out.println("On the run!");
+                //csvParser();
+                System.out.println("parsing finished!!!!!!!");
+                updateMap();
+                System.out.println("End of the Thread too!!!!!!!!!!!!!!!!!!!!!");
             }
         }).start();
     }
@@ -52,7 +66,7 @@ class Download
      * Function based on https://stackoverflow.com/questions/4120942/programatically-downloading-csv-files-with-java
      * This function is NOT thread safe. In order to run it correctly it needs to be put in a thread
      */
-    private void csvParser_Base()
+    private void csvParser()
     {
         String url_csv = "http://www.dati.salute.gov.it/imgs/C_17_dataset_5_download_itemDownload0_upFile.CSV";
         URL url = null;
@@ -152,8 +166,6 @@ class Download
         }
         catch(ArrayIndexOutOfBoundsException e)
         {
-            //System.out.println("Ultimo indice fatto = " + record.get(0));
-            
             //Line 26587 (record.get(0) = 12045) presents an error and throws a ArrayIndexOutOfBoundsException
             
             //Why not an IF() ELSE()? Because we have a LOT of data to analyze and adding a new
@@ -180,5 +192,29 @@ class Download
         {
             e.printStackTrace();
         }
+    }
+    
+    
+    /**
+     * Send a Broadcast intent to signal the end of Excel parsing
+     */
+    private void updateMap()
+    {
+        Intent updateMap = new Intent(broadcastAction);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(updateMap);
+    }
+    
+    private void registerReceiver()
+    {
+        //https://codelabs.developers.google.com/codelabs/android-training-broadcast-receivers/index.html?index=..%2F..%2Fandroid-training#3
+        this.receiveIntent = new MyReceiver();
+        LocalBroadcastManager.getInstance(context)
+                .registerReceiver(this.receiveIntent, new IntentFilter(broadcastAction));
+    }
+    
+    
+    public void unregisterReceiver()
+    {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiveIntent);
     }
 }

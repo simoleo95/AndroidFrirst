@@ -10,7 +10,8 @@ import it.univaq.mobileprogramming.entity.E_Preferita;
 
 @Database(entities = {E_Farmacia.class,
                       E_Preferita.class},
-          version = 1)
+          version = 2,
+          exportSchema = false)
 public abstract class D_Database extends RoomDatabase
 {
     //This object is meant to be used via D_Database object.
