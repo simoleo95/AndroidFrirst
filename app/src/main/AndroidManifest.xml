@@ -9,8 +9,11 @@
  Se non funziona bisogna impostare i tag per HTTPS come descritto
          nella lezione 14, slide 12
     -->
+
     <!-- GPS User location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+    <uses-permission android:name="android.hardware.location.gps"></uses-permission>
+
     <!-- Save user preferences to external Storage? -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 

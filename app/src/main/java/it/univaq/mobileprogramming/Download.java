@@ -4,7 +4,6 @@ package it.univaq.mobileprogramming;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.effect.Effect;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.apache.commons.csv.CSVFormat;
@@ -15,12 +14,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
-import it.univaq.mobileprogramming.entity.E_Preferita;
 
 
 class Download
@@ -55,7 +52,7 @@ class Download
                 System.out.println("On the run!");
                 //csvParser();
                 System.out.println("parsing finished!!!!!!!");
-                updateMap();
+                signal_ParsingFinished();
                 System.out.println("End of the Thread too!!!!!!!!!!!!!!!!!!!!!");
             }
         }).start();
@@ -198,12 +195,16 @@ class Download
     /**
      * Send a Broadcast intent to signal the end of Excel parsing
      */
-    private void updateMap()
+    private void signal_ParsingFinished()
     {
         Intent updateMap = new Intent(broadcastAction);
         LocalBroadcastManager.getInstance(context).sendBroadcast(updateMap);
     }
     
+    
+    /**
+     * Register the BroadcastManager prior to sending a Broadcast Intent
+     */
     private void registerReceiver()
     {
         //https://codelabs.developers.google.com/codelabs/android-training-broadcast-receivers/index.html?index=..%2F..%2Fandroid-training#3
@@ -213,6 +214,10 @@ class Download
     }
     
     
+    /**
+     * Unregister the BroadcastManager
+     * This method is called on MainActivity.onDestroy()
+     */
     public void unregisterReceiver()
     {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiveIntent);
