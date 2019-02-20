@@ -3,12 +3,12 @@
     package="it.univaq.mobileprogramming">
 
     <!-- PERMISSIONS -->
-    <!-- Volley HTTP requests -->
+    <!-- Volley HTTP requests (oppure lezione 14, slide 12)
+         Google Play Services
+         -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--
- Se non funziona bisogna impostare i tag per HTTPS come descritto
-         nella lezione 14, slide 12
-    -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <!-- GPS User location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
