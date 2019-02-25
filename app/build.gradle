@@ -46,7 +46,11 @@ dependencies {
 
 
     //Enable Google Play Services support for better location-based functionalities
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
+    implementation 'com.android.support:support-v4:28.0.0'
+
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
 
     //implementation 'com.google.android.gms:play-services-location:11.8.0' //Source: https://guides.codepath.com/android/Retrieving-Location-with-LocationServices-API
 
