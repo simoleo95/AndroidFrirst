@@ -10,10 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.Farmacia;
 import it.univaq.mobileprogramming.entity.Location;
+import it.univaq.mobileprogramming.utility.U_Location;
 
 public class MainActivity extends AppCompatActivity // <- to ensure backward compability
 {
     private Download download;
+    private U_Location location;
     
     
     @Override
@@ -24,13 +26,13 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
         
         
     
-        System.out.println("Inizio DOWNLOAD");
-        this.download = new Download(this);
+//        System.out.println("Inizio DOWNLOAD");
+//        this.download = new Download(this);
+//
+//        //This belongs to a different activity/class
+//        this.download.saveToDB();
         
-        //This belongs to a different activity/class
-        this.download.saveToDB();
-        
-        
+        location = new U_Location(this);
         
         
         
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
     protected void onDestroy()
     {
         this.download.unregisterReceiver();
+        location.googlePlayServices.disconnect();
         D_Database.closeConnection();
         super.onDestroy();
     }
