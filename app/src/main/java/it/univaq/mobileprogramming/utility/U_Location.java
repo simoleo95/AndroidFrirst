@@ -35,6 +35,7 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
     public GoogleApiClient googlePlayServices;
     public Double latitudine;
     public Double longitudine;
+    public String city;
     private int requestCode = 1;
 
     public U_Location(Context context)
@@ -48,7 +49,6 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
                 googlePlayServices = getGooglePlayServices();
                 googlePlayServices.connect();
                 System.out.println("Ho fatto le mie cose");
-                System.out.println("HO TROVATO LA CITTà: " + findCity());
             }
         }).start();
     }
@@ -56,7 +56,7 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
 
     //https://stackoverflow.com/questions/28852317/android-how-to-retrieve-current-location-using-google-play-services
 
-    public String findCity()
+    private void findCity()
     {
         Geocoder gcd = new Geocoder(context, Locale.getDefault());
         List<Address> addresses;
@@ -67,17 +67,20 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
             if(addresses != null)
             {
                 if(addresses.size() > 0)
-                    return addresses.get(0)
+                {
+                    city = addresses.get(0)
                             .getLocality();
-        
+                    System.out.println("L'array addresses che ho trovato: " + addresses.toString());
+                }
             }
         }
         catch(IOException e)
         {
-            return null;
+            return;
         }
-        return null;
+        return;
     }
+    
 
     /**
      * Instantiate the client needed to connect and disconnect to/from Google Play Services
@@ -141,12 +144,21 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
                             longitudine = location.getLongitude();
                             System.out.println("latitudine = " + latitudine);
                             System.out.println("longitudine = " + longitudine);
+                            findCity();
+                            System.out.println("Ci troviamo a: " + city);
                         }
                     }
                 });
         System.out.println("Ho TERMINATO la location!!");
     }
     
+    /**
+     * Called after the user has been prompted to grand permissions
+     *
+     * @param requestCode the same code put into the ActivityCompat.requestPermissions()
+     * @param permissions ???
+     * @param grantResults ???
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -169,6 +181,7 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
             }
         }
     }
+    
     
     /**
      * Add a listener to whenever the connection to Google Play Services fails
