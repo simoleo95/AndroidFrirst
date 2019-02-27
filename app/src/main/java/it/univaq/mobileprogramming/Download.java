@@ -50,7 +50,7 @@ class Download
             public void run()
             {
                 System.out.println("On the run!");
-                //csvParser();
+                //csvParser(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
                 System.out.println("parsing finished!!!!!!!");
                 signal_ParsingFinished();
                 System.out.println("End of the Thread too!!!!!!!!!!!!!!!!!!!!!");
@@ -97,6 +97,9 @@ class Download
         }
     }
     
+    /**
+     * Debug only
+     */
     private void showRecords()
     {
         List<E_Farmacia> EF1 = roomDB.D_Farmacia_Access().getAllPharmaciesIn("TORINO");
