@@ -33,9 +33,10 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
 {
     Context context;
     public GoogleApiClient googlePlayServices;
-    public Double latitudine;
-    public Double longitudine;
-    public String city;
+    
+    private Double latitudine;
+    private Double longitudine;
+    private String city;
     private int requestCode = 1;
 
     public U_Location(Context context)
@@ -48,7 +49,7 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
             {
                 googlePlayServices = getGooglePlayServices();
                 googlePlayServices.connect();
-                System.out.println("Ho fatto le mie cose");
+//                System.out.println("Ho finito il thread per la localizzazione");
             }
         }).start();
     }
@@ -68,16 +69,18 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
             {
                 if(addresses.size() > 0)
                 {
-                    city = addresses.get(0)
-                            .getLocality();
-                    System.out.println("L'array addresses che ho trovato: " + addresses.toString());
+                    setCity(addresses.get(0)
+                            .getLocality());
+//                    System.out.println("L'array addresses che ho trovato: " + addresses.toString());
                 }
             }
         }
         catch(IOException e)
         {
+            setCity("L'Aquila"); //This is BAD... but also a short fix
             return;
         }
+        setCity("L'Aquila"); //This is BAD... but also a short fix
         return;
     }
     
@@ -120,32 +123,38 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
     };
     
     
+    /**
+     * Enable to get user's latitude and longitude.
+     * Moreover it reverse-geocode the user position to detect the current user's city via findCity()
+     */
     private void updateLocation()
     {
         FusedLocationProviderClient loco = LocationServices.getFusedLocationProviderClient(context);
         
-        System.out.println("Sono pronto Connesso");
+//        System.out.println("Sono pronto Connesso");
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            System.out.println("SONO NELL'IF PERCHE' NON HO I PERMESSI!");
+//            System.out.println("SONO NELL'IF PERCHE' NON HO I PERMESSI!");
             String askPermissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions((Activity) context, askPermissions, requestCode);
             return;
         }
-        System.out.println("Sono prima della location");
+//        System.out.println("Sono prima della location");
         loco.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                .addOnSuccessListener(new OnSuccessListener<Location>()
+                {
                     @Override
-                    public void onSuccess(Location location) {
+                    public void onSuccess(Location location)
+                    {
                         if (location != null)
                         {
-                            System.out.println("Ho trovato una location!!");
-                            latitudine = location.getLatitude();
-                            longitudine = location.getLongitude();
-                            System.out.println("latitudine = " + latitudine);
-                            System.out.println("longitudine = " + longitudine);
+//                            System.out.println("Ho trovato una location!!");
+                            setLatitudine(location.getLatitude());
+                            setLongitudine(location.getLongitude());
                             findCity();
-                            System.out.println("Ci troviamo a: " + city);
+//                            System.out.println("latitudine = " + latitudine);
+//                            System.out.println("longitudine = " + longitudine);
+//                            System.out.println("Ci troviamo a: " + city);
                         }
                     }
                 });
@@ -156,12 +165,13 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
      * Called after the user has been prompted to grand permissions
      *
      * @param requestCode the same code put into the ActivityCompat.requestPermissions()
-     * @param permissions ???
+     * @param permissions needed permission to run the activity/app
      * @param grantResults ???
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           String permissions[], int[] grantResults)
+    {
         switch (requestCode)
         {
             case 1:
@@ -175,8 +185,8 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
                 else
                 {
                     //Trivial solution #1 - Setup the L'Aquila coordinates
-                    latitudine = 42.3498479;
-                    longitudine = 13.3995091;
+                    setLatitudine(42.3498479);
+                    setLongitudine(13.3995091);
                 }
             }
         }
@@ -191,4 +201,36 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
     };
+    
+    
+    public Double getLatitudine()
+    {
+        return latitudine;
+    }
+    
+    public void setLatitudine(Double latitudine)
+    {
+        this.latitudine = latitudine;
+    }
+    
+    public Double getLongitudine()
+    {
+        return longitudine;
+    }
+    
+    public void setLongitudine(Double longitudine)
+    {
+        this.longitudine = longitudine;
+    }
+    
+    public String getCity()
+    {
+        return city;
+    }
+    
+    public void setCity(String city)
+    {
+        this.city = city;
+    }
+    
 }
