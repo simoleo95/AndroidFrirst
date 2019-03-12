@@ -3,6 +3,8 @@ package it.univaq.mobileprogramming.utility;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -12,12 +14,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -32,12 +37,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import it.univaq.mobileprogramming.MyReceiver;
+
 /**
  * This class enables to connect and disconnect from Google Play Services
  * It should be instantiated on MainActivity.onStart() calling googlePlayServices.connect()
  * and then onStop() calling googlePlayServices.disconnect()
  */
-public class U_Location implements ActivityCompat.OnRequestPermissionsResultCallback
+public class U_Location extends Activity implements ActivityCompat.OnRequestPermissionsResultCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     Context context;
     public GoogleApiClient googlePlayServices;
@@ -51,7 +58,7 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
     private Double latitudine;
     private Double longitudine;
     private Location userLocation = new Location("Creator");
-    private String city;
+    public static String userCurrentCity = "";
     private int requestCode = 1;
 
     public U_Location(Context context)
@@ -60,7 +67,13 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
         this.setGpsUpdateInterval(1000);
         this.setGpsFastestUpdateInterval(500);
         this.setGpsPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        System.out.println("COSTRUTTORE!!!!");
+    
+        this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
+    
         this.setLocationRequest();
+        this.createLocationCallback();
+        
         
         new Thread(new Runnable()
         {
@@ -69,18 +82,13 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
             {
                 googlePlayServices = getGooglePlayServices();
                 googlePlayServices.connect();
-                getUserCurrentLocation();
-//                System.out.println("Ho finito il thread per la localizzazione");
             }
         }).start();
     }
-
-    //NOTA:
-    //BISOGNA LEGGERE ED AGGIUNGERE TUTTA QUESTA ROBA: https://developer.android.com/training/location
     
     
     /**
-     * Find user's city from its latitude and longitude
+     * Find user's userCurrentCity from its latitude and longitude
      */
     private void findCity()
     {
@@ -95,18 +103,17 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
             {
                 if(addresses.size() > 0)
                 {
-                    setCity(addresses.get(0)
+                    setUserCurrentCity(addresses.get(0)
                             .getLocality());
-                    System.out.println("L'array addresses che ho trovato: " + addresses.toString());
                 }
             }
         }
         catch(IOException e)
         {
-            setCity("L'Aquila"); //This is BAD... but also a short fix
+            setUserCurrentCity("L'Aquila"); //This is BAD... but also a short fix
             return;
         }
-        setCity("L'Aquila"); //This is BAD... but also a short fix
+        setUserCurrentCity("L'Aquila"); //This is BAD... but also a short fix
         return;
     }
     
@@ -153,12 +160,10 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
     
     /**
      * Enable to get user's latitude and longitude.
-     * Moreover it reverse-geocode the user position to detect the current user's city via findCity()
+     * Moreover it reverse-geocode the user position to detect the current user's userCurrentCity via findCity()
      */
     private void lastUserLocation()
     {
-        this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
-        
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             String askPermissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
@@ -228,7 +233,7 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
 //PART 2 - CHANGE LOCATION SETTINGS
 //Source: https://developer.android.com/training/location/change-location-settings
     
-    private void getUserCurrentLocation()
+    public void getUserCurrentLocation()
     {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(this.getLocationRequest());
@@ -248,7 +253,22 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
                 
                 //PART 3 - RECEIVE LOCATION UPDATES
                 //Source: https://developer.android.com/training/location/receive-location-updates
-                getLocationProviderClient().requestLocationUpdates(getLocationRequest(), getLocationCallback(), null);
+                
+                if ( ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED )
+                {
+                    ActivityCompat.requestPermissions(
+                            (Activity) context,
+                            new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+                            requestCode );
+                }
+                LocationRequest r = getLocationRequest();
+                LocationCallback c = getLocationCallback();
+                System.out.print("Req = ");
+                System.out.println(r != null);
+                System.out.print("Call = ");
+                System.out.println(c != null);
+                
+                getLocationProviderClient().requestLocationUpdates(r, c, null);
             }
         });
         
@@ -297,7 +317,7 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
      * Invoked by the Fused Location Provider to update the user location
      * Source: https://developer.android.com/training/location/receive-location-updates#callback
      */
-    public void updateLocation()
+    public void createLocationCallback()
     {
         this.locationCallback = new LocationCallback()
         {
@@ -311,7 +331,9 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
                 for(Location location : locationResult.getLocations())
                 {
                     //UPDATE THE GUI WITH LOCATION DATA HERE
-    
+                    latitudine = location.getLatitude();
+                    longitudine = location.getLongitude();
+                    findCity();
                     //UPDATE THE GUI WITH LOCATION DATA HERE
                 }
             }
@@ -323,14 +345,30 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
         return locationRequest;
     }
     
-    private void setLocationRequest()
+    public void setLocationRequest()
     {
-        LocationRequest locationRequest = LocationRequest.create();
+        LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(this.getGpsUpdateInterval());
         locationRequest.setFastestInterval(this.getGpsFastestUpdateInterval());
         locationRequest.setPriority(this.getGpsPriority());
         this.locationRequest = locationRequest;
     }
+    
+    private void sendLocationAcquired_Intent()
+    {
+        System.out.println("Cambiata Loc e mando intent");
+        MyReceiver receiveIntent = new MyReceiver();
+        String broadcastAction = U_Vars.location_Action;
+        
+        //Register the BroadcastManager
+        LocalBroadcastManager.getInstance(context)
+                .registerReceiver(receiveIntent, new IntentFilter(broadcastAction));
+    
+        //Send Intent
+        LocalBroadcastManager.getInstance(context)
+                .sendBroadcast(new Intent(broadcastAction));
+    }
+    
     
     public Double getLatitudine()
     {
@@ -362,14 +400,18 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
         this.userLocation = userLocation;
     }
     
-    public String getCity()
+    public String getUserCurrentCity()
     {
-        return city;
+        return userCurrentCity;
     }
     
-    public void setCity(String city)
+    public void setUserCurrentCity(String city)
     {
-        this.city = city;
+        if(!city.equals(this.userCurrentCity))
+        {
+            this.userCurrentCity = city;
+            this.sendLocationAcquired_Intent();
+        }
     }
     
     public long getGpsUpdateInterval()
@@ -400,5 +442,29 @@ public class U_Location implements ActivityCompat.OnRequestPermissionsResultCall
     public void setGpsPriority(int gpsPriority)
     {
         this.gpsPriority = gpsPriority;
+    }
+    
+    @Override
+    public void onConnected(@Nullable Bundle bundle)
+    {
+    
+    }
+    
+    @Override
+    public void onConnectionSuspended(int i)
+    {
+    
+    }
+    
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+    
+    }
+    
+    @Override
+    public void onLocationChanged(Location location)
+    {
+    
     }
 }

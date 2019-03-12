@@ -1,16 +1,17 @@
 package it.univaq.mobileprogramming;
 
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import it.univaq.mobileprogramming.database.D_Database;
-import it.univaq.mobileprogramming.entity.Farmacia;
-import it.univaq.mobileprogramming.entity.Location;
+import it.univaq.mobileprogramming.entity.E_Farmacia;
 import it.univaq.mobileprogramming.utility.U_Location;
+import it.univaq.mobileprogramming.utility.U_Vars;
+
+import static it.univaq.mobileprogramming.utility.U_Vars.farmacieUtente;
 
 public class MainActivity extends AppCompatActivity // <- to ensure backward compability
 {
@@ -26,48 +27,55 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
         
         
     
-//        System.out.println("Inizio DOWNLOAD");
-//        this.download = new Download(this);
-//
-//        //This belongs to a different activity/class
-//        this.download.saveToDB();
-        
-        location = new U_Location(this);
-        
-        
-        
-        Location[] loc = new Location[2];
-        Farmacia[] farmacia = new Farmacia[2];
+        System.out.println("Inizio DOWNLOAD");
+        this.download = new Download(this);
+
+        //This belongs to a different activity/class
+        this.download.saveToDB();
     
-        Farmacia f1 = new Farmacia();
-        f1.setDescrizione("FARMACIA CASABIANCA S.N.C. DEI DOTT.RI PALINI ROBERTA, RESTIVO PIETRO E CANTONI ANDREA");
+        System.out.println("Inizio location MAIN");
+        location = new U_Location(this);
+    
+        final Context context = this;
         
-        Location l1 = new Location();
-        l1.setIndirizzo("Via Buggianese, 108");
-        f1.setLocation(l1);
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while(U_Vars.loadingDone == false) ;
+                
+                String userCity = location.getUserCurrentCity();
+                System.out.println("Mi trovo a: " + userCity);
+                D_Database room = D_Database.getInstance(context);
+                U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(userCity);
+                
+                U_Vars.canShowListNow = true;
+    
+            }
+        }).start();
+    
+    
+        while(U_Vars.canShowListNow == false) ;
         
-        
-        
-        Farmacia f2 = new Farmacia();
-        f2.setDescrizione("SAN FRANCESCO DA PAOLA");
-        Location l2 = new Location();
-        l2.setIndirizzo("Via San Francesco Da Paola, 10");
-        f2.setLocation(l2);
-        
-        
-        farmacia[0]=f1;
-        farmacia[1]=f2;
-
-        // Adapter adapter = new Adapter(data);
-        AdapterRecycler adapter = new AdapterRecycler(farmacia);
-
-
+        AdapterRecycler adapter = new AdapterRecycler(U_Vars.farmacieUtente);
         //Here link the main_list to the context (MainActivity)
         RecyclerView list = findViewById(R.id.main_list); //Search for R.id.main_list in the activity_main.xml because it's the xml file linked in the onCreate() function
-        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setLayoutManager(new LinearLayoutManager(context));
         list.setAdapter(adapter);
     }
     
+    public static void showFarms()
+    {
+    }
+    
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        location.getUserCurrentLocation();
+        location.createLocationCallback();
+    }
     
     
     @Override

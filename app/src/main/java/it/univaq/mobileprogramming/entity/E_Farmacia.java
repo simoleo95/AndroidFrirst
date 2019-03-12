@@ -62,7 +62,7 @@ public class E_Farmacia
      * @param indirizzo   Farmacia's address
      * @param farmacia    Farmacia's description
      * @param iva         Partita IVA
-     * @param comune      Farmacia's city location
+     * @param comune      Farmacia's userCurrentCity location
      * @param frazione    City's fraction
      * @param provincia   City's provence
      * @param regione     City's region

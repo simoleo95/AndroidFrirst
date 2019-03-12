@@ -34,16 +34,16 @@ public interface D_Farmacia
     
     
     /**
-     * Retrieve all the pharmacies in the same city as the user's
+     * Retrieve all the pharmacies in the same userCurrentCity as the user's
      *
-     * @param comune user's city
-     * @return a List of all the open pharmacies in the selected city
+     * @param comune user's userCurrentCity
+     * @return a List of all the open pharmacies in the selected userCurrentCity
      */
     @Query("SELECT * " +
            "FROM farmacie " +
            "WHERE comune = :comune")
     //public E_Farmacia getAllPharmaciesIn(String comune);
-    public List<E_Farmacia> getAllPharmaciesIn(String comune);
+    public E_Farmacia[] getAllPharmaciesIn(String comune);
     
     
     /**

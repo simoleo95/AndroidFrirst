@@ -9,14 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import it.univaq.mobileprogramming.entity.Farmacia;
+import it.univaq.mobileprogramming.entity.E_Farmacia;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder>
 {
     
-    private Farmacia[] data;
+    private E_Farmacia[] data;
     
-    public AdapterRecycler(Farmacia[] data)
+    public AdapterRecycler(E_Farmacia[] data)
     {
         this.data = data;
     }
@@ -35,10 +35,9 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) //https://stackoverflow.com/questions/37523308/when-onbindviewholder-is-called-and-how-it-works/37524217
     {
         //This function will ITERATE itself on EACH element present in farmacia[] array
-        Farmacia farmacia = data[i];
-        viewHolder.title.setText(farmacia.getDescrizione());
-        viewHolder.subtitle.setText(farmacia.getLocation()
-                                            .getIndirizzo());
+        E_Farmacia farmacia = data[i];
+        viewHolder.title.setText(farmacia.getFarmacia());
+        viewHolder.subtitle.setText(farmacia.getIndirizzo());
     }
     
     @Override
@@ -66,12 +65,12 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
                 @Override
                 public void onClick(View v)
                 {
-                    Farmacia farmacia = data[getAdapterPosition()];
+                    E_Farmacia farmacia = data[getAdapterPosition()];
                     
                     Intent intent = new Intent(v.getContext(), DetailsActivity.class);
                     //Retrieve the user clicked element and pass the information to the intent
-                    intent.putExtra("cityName", farmacia.getDescrizione());
-                    intent.putExtra("city", farmacia.getLocation().getIndirizzo());
+                    intent.putExtra("cityName", farmacia.getFarmacia());
+                    intent.putExtra("userCurrentCity", farmacia.getIndirizzo());
                     
                     v.getContext()
                             .startActivity(intent);

@@ -18,6 +18,7 @@ import java.util.List;
 
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
+import it.univaq.mobileprogramming.utility.U_Vars;
 
 
 class Download
@@ -25,7 +26,6 @@ class Download
     private Context context;
     private D_Database roomDB;
     private MyReceiver receiveIntent;
-    private static String broadcastAction = BuildConfig.APPLICATION_ID + ".CUSTOM_BROADCAST_ACTION";
     
     public Download(Context context)
     {
@@ -49,11 +49,9 @@ class Download
             @Override
             public void run()
             {
-                System.out.println("On the run!");
-                //csvParser(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
+//                csvParser(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
                 System.out.println("parsing finished!!!!!!!");
                 signal_ParsingFinished();
-                System.out.println("End of the Thread too!!!!!!!!!!!!!!!!!!!!!");
             }
         }).start();
     }
@@ -84,6 +82,7 @@ class Download
                                                      .withIgnoreEmptyLines() //Returns a new CSVFormat with the "empty line skipping" behavior of the format set to true
             );
             
+            int i = 0;
             for(CSVRecord record : parser)
             {
                 safeExcelReader(record);
@@ -102,26 +101,26 @@ class Download
      */
     private void showRecords()
     {
-        List<E_Farmacia> EF1 = roomDB.D_Farmacia_Access().getAllPharmaciesIn("TORINO");
-        int max = 15;
-        for(int i = 0; i < max; i++)
-        {
-            showF(EF1, i);
-    
-        }
-        int sizeF = EF1.size();
-        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-        System.out.println("Total pharms now = " + sizeF);
-        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-        for(int i = 0; i < max; i++)
-        {
-            showF(EF1, sizeF - 5 + i);
-        
-        }
-        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+//        E_Farmacia[] EF1 = roomDB.D_Farmacia_Access().getAllPharmaciesIn("TORINO");
+//        int max = 15;
+//        for(int i = 0; i < max; i++)
+//        {
+//            showF(EF1, i);
+//
+//        }
+//        int sizeF = EF1.size();
+//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+//        System.out.println("Total pharms now = " + sizeF);
+//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+//        for(int i = 0; i < max; i++)
+//        {
+//            showF(EF1, sizeF - 5 + i);
+//
+//        }
+//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
+//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
     }
     
     private void showF(List<E_Farmacia> EF1, int i)
@@ -145,7 +144,7 @@ class Download
         {
             if(record.get(15).equals("-") //DATAFINEVALIDITA == "-" indica una farmacia non chiusa
                     && (!record.get(0).equals("0") //Often it will wrongly read a "0" (Probably because we have a STREAM of data and records aren't fetched soon enough)
-                        || !record.get(0).equals("null"))) //or "null" value so we want to discard these records
+                        || !record.get(0).equals("null"))) //or a "null" value so we want to discard these records
             {
                 E_Farmacia f = new E_Farmacia(
                         Long.parseLong(record.get(0)),//ID
@@ -166,7 +165,7 @@ class Download
         }
         catch(ArrayIndexOutOfBoundsException e)
         {
-            //Line 26587 (record.get(0) = 12045) presents an error and throws a ArrayIndexOutOfBoundsException
+            //Line 26587 (record.get(0) = 12045) presents an error and throws an ArrayIndexOutOfBoundsException
             
             //Why not an IF() ELSE()? Because we have a LOT of data to analyze and adding a new
             //instruction to check for each record would slow down the whole process
@@ -200,7 +199,7 @@ class Download
      */
     private void signal_ParsingFinished()
     {
-        Intent updateMap = new Intent(broadcastAction);
+        Intent updateMap = new Intent(U_Vars.download_Action);
         LocalBroadcastManager.getInstance(context).sendBroadcast(updateMap);
     }
     
@@ -213,7 +212,7 @@ class Download
         //https://codelabs.developers.google.com/codelabs/android-training-broadcast-receivers/index.html?index=..%2F..%2Fandroid-training#3
         this.receiveIntent = new MyReceiver();
         LocalBroadcastManager.getInstance(context)
-                .registerReceiver(this.receiveIntent, new IntentFilter(broadcastAction));
+                .registerReceiver(this.receiveIntent, new IntentFilter(U_Vars.download_Action));
     }
     
     
