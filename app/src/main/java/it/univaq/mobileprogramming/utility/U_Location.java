@@ -44,7 +44,7 @@ import it.univaq.mobileprogramming.MyReceiver;
  * It should be instantiated on MainActivity.onStart() calling googlePlayServices.connect()
  * and then onStop() calling googlePlayServices.disconnect()
  */
-public class U_Location extends Activity implements ActivityCompat.OnRequestPermissionsResultCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+public class U_Location extends Activity
 {
     Context context;
     public GoogleApiClient googlePlayServices;
@@ -67,23 +67,15 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
         this.setGpsUpdateInterval(1000);
         this.setGpsFastestUpdateInterval(500);
         this.setGpsPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        System.out.println("COSTRUTTORE!!!!");
-    
         this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
-    
         this.setLocationRequest();
         this.createLocationCallback();
+    
+        googlePlayServices = getGooglePlayServices();
+        googlePlayServices.connect();
         
-        
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                googlePlayServices = getGooglePlayServices();
-                googlePlayServices.connect();
-            }
-        }).start();
+        getUserCurrentLocation();
+        lastUserLocation();
     }
     
     
@@ -105,6 +97,7 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
                 {
                     setUserCurrentCity(addresses.get(0)
                             .getLocality());
+                    
                 }
             }
         }
@@ -132,7 +125,6 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
                 .addOnConnectionFailedListener(connectionFailed)
                 .addApi(LocationServices.API)
                 .build();
-
         return client;
     }
 
@@ -182,8 +174,10 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
                             setLongitudine(location.getLongitude());
                             userLocation.setLatitude(location.getLatitude());
                             userLocation.setLongitude(location.getLongitude());
+                            
                             findCity();
                         }
+                        
                     }
                 });
     }
@@ -263,10 +257,6 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
                 }
                 LocationRequest r = getLocationRequest();
                 LocationCallback c = getLocationCallback();
-                System.out.print("Req = ");
-                System.out.println(r != null);
-                System.out.print("Call = ");
-                System.out.println(c != null);
                 
                 getLocationProviderClient().requestLocationUpdates(r, c, null);
             }
@@ -310,7 +300,7 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
     
     public LocationCallback getLocationCallback()
     {
-        return locationCallback;
+        return this.locationCallback;
     }
     
     /**
@@ -324,6 +314,7 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
             @Override
             public void onLocationResult(LocationResult locationResult)
             {
+                super.onLocationResult(locationResult);
                 if(locationResult == null)
                 {
                     return;
@@ -407,6 +398,7 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
     
     public void setUserCurrentCity(String city)
     {
+        
         if(!city.equals(this.userCurrentCity))
         {
             this.userCurrentCity = city;
@@ -444,27 +436,4 @@ public class U_Location extends Activity implements ActivityCompat.OnRequestPerm
         this.gpsPriority = gpsPriority;
     }
     
-    @Override
-    public void onConnected(@Nullable Bundle bundle)
-    {
-    
-    }
-    
-    @Override
-    public void onConnectionSuspended(int i)
-    {
-    
-    }
-    
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
-    {
-    
-    }
-    
-    @Override
-    public void onLocationChanged(Location location)
-    {
-    
-    }
 }

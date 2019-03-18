@@ -13,7 +13,7 @@ import it.univaq.mobileprogramming.entity.E_Farmacia;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder>
 {
-    
+    //Source: https://developer.android.com/guide/topics/ui/layout/recyclerview
     private E_Farmacia[] data;
     
     public AdapterRecycler(E_Farmacia[] data)
@@ -38,6 +38,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
         E_Farmacia farmacia = data[i];
         viewHolder.title.setText(farmacia.getFarmacia());
         viewHolder.subtitle.setText(farmacia.getIndirizzo());
+        
     }
     
     @Override

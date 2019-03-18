@@ -3,7 +3,8 @@
     package="it.univaq.mobileprogramming">
 
     <!-- PERMISSIONS -->
-    <!-- Volley HTTP requests (oppure lezione 14, slide 12)
+
+    <!-- Volley HTTP requests
          Google Play Services
          -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,8 +12,17 @@
 
 
     <!-- GPS User location -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
-    <uses-permission android:name="android.hardware.location.gps"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.hardware.location.gps" />
+
+    <!-- Aggiunti questi permessi perchè Android Studio trova una location sbagliata
+        Source: https://stackoverflow.com/questions/9778251/gps-wrong-location
+
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    -->
 
     <!-- Save user preferences to external Storage? -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -25,6 +35,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <uses-library android:name="com.google.android.maps" />
+
 
         <activity android:name=".MainActivity">
             <intent-filter>
