@@ -9,14 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder>
 {
     //Source: https://developer.android.com/guide/topics/ui/layout/recyclerview
-    private E_Farmacia[] data;
+    private List<E_Farmacia> data;
     
-    public AdapterRecycler(E_Farmacia[] data)
+    public AdapterRecycler(List<E_Farmacia> data)
     {
         this.data = data;
     }
@@ -35,7 +37,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) //https://stackoverflow.com/questions/37523308/when-onbindviewholder-is-called-and-how-it-works/37524217
     {
         //This function will ITERATE itself on EACH element present in farmacia[] array
-        E_Farmacia farmacia = data[i];
+        E_Farmacia farmacia = data.get(i);
         viewHolder.title.setText(farmacia.getFarmacia());
         viewHolder.subtitle.setText(farmacia.getIndirizzo());
         
@@ -44,7 +46,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     @Override
     public int getItemCount()
     {
-        return data.length;
+        return data.size();
     }
     
     //This class is like a OnClick_doThings
@@ -66,7 +68,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
                 @Override
                 public void onClick(View v)
                 {
-                    E_Farmacia farmacia = data[getAdapterPosition()];
+                    E_Farmacia farmacia = data.get(getAdapterPosition());
                     
                     Intent intent = new Intent(v.getContext(), DetailsActivity.class);
                     //Retrieve the user clicked element and pass the information to the intent

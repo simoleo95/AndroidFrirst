@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.List;
+
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 import it.univaq.mobileprogramming.utility.U_Location;
-import it.univaq.mobileprogramming.utility.U_UserLocation;
 import it.univaq.mobileprogramming.utility.U_Vars;
 
 import static it.univaq.mobileprogramming.utility.U_Vars.farmacieUtente;
@@ -25,51 +26,27 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Link this class(context) to a specific XML (activity_main)
-    
-    
-    
+        
+        
+        
         location = new U_Location(this);
         
         System.out.println("Inizio DOWNLOAD");
         this.download = new Download(this);
-
+        
         //This belongs to a different activity/class
         this.download.saveToDB();
-    
+        
         System.out.println("Inizio location MAIN");
-//        U_UserLocation loc = new U_UserLocation(this);
-//        loc.getUserCity();
-//
-//        System.out.println("CI TROVIAMO NELLA CITTà: " + loc.getUserCity());
-        
-        
 
-//        String userCity = location.getUserCurrentCity();
-//        System.out.println("Mi trovo a: " + userCity);
-//        D_Database room = D_Database.getInstance(this);
-//        U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(userCity);
-//
-//        U_Vars.canShowListNow = true;
-//        System.out.println("Ok, ora dovrei uscire da sta roba!");
-//
-//
-//        System.out.println("Sono PRIMA del while :( guarda qua...: " + U_Vars.canShowListNow);
-//        while(U_Vars.canShowListNow == false) ;
-//
-//        System.out.println("Sono DOPO il while!!! Infatti: " + U_Vars.canShowListNow);
-//
-//        AdapterRecycler adapter = new AdapterRecycler(U_Vars.farmacieUtente);
-//        //Here link the main_list to the context (MainActivity)
-//        RecyclerView list = findViewById(R.id.main_list); //Search for R.id.main_list in the activity_main.xml because it's the xml file linked in the onCreate() function
-//        list.setLayoutManager(new LinearLayoutManager(this));
-//        list.setAdapter(adapter);
+        
     }
     
     public static void showFarms()
     {
     }
-    
-    
+
+
 //    @Override
 //    protected void onResume()
 //    {
@@ -82,7 +59,37 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
     protected void onStart()
     {
         super.onStart();
-        System.out.println("Mi trovo a: " + location.getUserCurrentCity());
+    
+        final String userCity = location.getUserCurrentCity();
+        System.out.println("HO TROVATO!!!!!!!!!!! : " + userCity);
+        final Context context = this;
+    
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                D_Database room = D_Database.getInstance(context);
+    
+                U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn("L'AQUILA");
+                System.out.println("ESISTONO TANTE FARMACIE: " + U_Vars.farmacieUtente.size());
+            }
+        }).start();
+
+
+//
+//
+//        System.out.println("Sono PRIMA del while :( guarda qua...: " + U_Vars.canShowListNow);
+//        while(U_Vars.canShowListNow == false) ;
+//
+//        System.out.println("Sono DOPO il while!!! Infatti: " + U_Vars.canShowListNow);
+//
+        while(U_Vars.farmacieUtente == null || U_Vars.farmacieUtente.size() == 0) ;
+        AdapterRecycler adapter = new AdapterRecycler(U_Vars.farmacieUtente);
+        //Here link the main_list to the context (MainActivity)
+        RecyclerView list = findViewById(R.id.main_list); //Search for R.id.main_list in the activity_main.xml because it's the xml file linked in the onCreate() function
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setAdapter(adapter);
     }
     
     

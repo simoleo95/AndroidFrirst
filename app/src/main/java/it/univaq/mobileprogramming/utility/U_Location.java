@@ -347,7 +347,6 @@ public class U_Location extends Activity
     
     private void sendLocationAcquired_Intent()
     {
-        System.out.println("Cambiata Loc e mando intent");
         MyReceiver receiveIntent = new MyReceiver();
         String broadcastAction = U_Vars.location_Action;
         
@@ -398,7 +397,7 @@ public class U_Location extends Activity
     
     public void setUserCurrentCity(String city)
     {
-        
+        city = city.toUpperCase();
         if(!city.equals(this.userCurrentCity))
         {
             this.userCurrentCity = city;

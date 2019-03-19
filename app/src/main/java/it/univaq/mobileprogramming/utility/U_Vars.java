@@ -1,5 +1,7 @@
 package it.univaq.mobileprogramming.utility;
 
+import java.util.List;
+
 import it.univaq.mobileprogramming.BuildConfig;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 
@@ -23,5 +25,5 @@ public class U_Vars
     /** Show pharms list */
     public static boolean canShowListNow = false;
     
-    public static E_Farmacia[] farmacieUtente;
+    public static List<E_Farmacia> farmacieUtente;
 }

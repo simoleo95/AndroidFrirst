@@ -43,7 +43,7 @@ public interface D_Farmacia
            "FROM farmacie " +
            "WHERE comune = :comune")
     //public E_Farmacia getAllPharmaciesIn(String comune);
-    public E_Farmacia[] getAllPharmaciesIn(String comune);
+    public List<E_Farmacia> getAllPharmaciesIn(String comune);
     
     
     /**
