@@ -50,7 +50,6 @@ class Download
             public void run()
             {
 //                csvParser(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
-                System.out.println("parsing finished!!!!!!!");
                 signal_ParsingFinished();
             }
         }).start();

@@ -97,7 +97,6 @@ public class U_Location extends Activity
                 {
                     setUserCurrentCity(addresses.get(0)
                             .getLocality());
-                    
                 }
             }
         }
@@ -397,6 +396,8 @@ public class U_Location extends Activity
     
     public void setUserCurrentCity(String city)
     {
+        System.out.println("- - - - - - - - >>> " + city);
+        System.out.println("- - - - - - - - > " + userCurrentCity);
         city = city.toUpperCase();
         if(!city.equals(this.userCurrentCity))
         {

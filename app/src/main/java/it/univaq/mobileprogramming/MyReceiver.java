@@ -39,7 +39,7 @@ public class MyReceiver extends BroadcastReceiver
             else if(action.equals(U_Vars.location_Action))
             {
                 System.out.println("B) Ho ricevuto questo: " + action);
-                U_Vars.dataHasBeenSavedToDB = true;
+//                U_Vars.dataHasBeenSavedToDB = true; //rimuovi in fase di RILASCIO
                 U_Vars.userHasBeenLocated = true;
             }
             System.out.println("Fine Broadcast 1");

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.Arrays;
 import java.util.List;
 
 import it.univaq.mobileprogramming.database.D_Database;
@@ -31,21 +32,12 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
         
         location = new U_Location(this);
         
-        System.out.println("Inizio DOWNLOAD");
         this.download = new Download(this);
         
         //This belongs to a different activity/class
         this.download.saveToDB();
-        
-        System.out.println("Inizio location MAIN");
-
-        
     }
     
-    public static void showFarms()
-    {
-    }
-
 
 //    @Override
 //    protected void onResume()
@@ -60,21 +52,26 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
     {
         super.onStart();
     
-        final String userCity = location.getUserCurrentCity();
-        System.out.println("HO TROVATO!!!!!!!!!!! : " + userCity);
-        final Context context = this;
-    
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                D_Database room = D_Database.getInstance(context);
-    
-                U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn("L'AQUILA");
-                System.out.println("ESISTONO TANTE FARMACIE: " + U_Vars.farmacieUtente.size());
-            }
-        }).start();
+//
+//        final Context context = this;
+//
+//        new Thread(new Runnable()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                D_Database room = D_Database.getInstance(context);
+//
+//                String userCity = location.getUserCurrentCity();
+//                while(userCity.equals(""))
+//                {
+//                    userCity = location.getUserCurrentCity();
+//                }
+//                System.out.println("HO TROVATO!!!!!!!!!!! : " + userCity);
+//                U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(userCity);
+//                System.out.println("ESISTONO TANTE FARMACIE: " + U_Vars.farmacieUtente.size());
+//            }
+//        }).start();
 
 
 //
@@ -84,7 +81,11 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
 //
 //        System.out.println("Sono DOPO il while!!! Infatti: " + U_Vars.canShowListNow);
 //
-        while(U_Vars.farmacieUtente == null || U_Vars.farmacieUtente.size() == 0) ;
+        
+        if(U_Vars.farmacieUtente == null)
+        {
+            U_Vars.farmacieUtente = Arrays.asList(new E_Farmacia(13, "a", "b", "c", "a", "b", "c", "a", "b", "c", "a"));
+        }
         AdapterRecycler adapter = new AdapterRecycler(U_Vars.farmacieUtente);
         //Here link the main_list to the context (MainActivity)
         RecyclerView list = findViewById(R.id.main_list); //Search for R.id.main_list in the activity_main.xml because it's the xml file linked in the onCreate() function
