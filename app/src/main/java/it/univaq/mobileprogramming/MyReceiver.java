@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 
+import it.univaq.mobileprogramming.activities.A_ShowPharmaciesList;
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 import it.univaq.mobileprogramming.utility.U_Location;
 import it.univaq.mobileprogramming.utility.U_Vars;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * This class updates the map when a specific Broadcast Intent is received
@@ -28,8 +31,8 @@ public class MyReceiver extends BroadcastReceiver
             System.out.println("Intent iniziale: " + action);
             System.out.println("Switch with: " + U_Vars.download_Action + ", OR " + U_Vars.location_Action);
             
-            System.out.println("if 1 = " + action.equals(U_Vars.download_Action));
-            System.out.println("if 2 = " + action.equals(U_Vars.location_Action));
+            System.out.println("if DWNL = " + action.equals(U_Vars.download_Action));
+            System.out.println("if LOC  = " + action.equals(U_Vars.location_Action));
             
             if(action.equals(U_Vars.download_Action))
             {
@@ -39,16 +42,16 @@ public class MyReceiver extends BroadcastReceiver
             else if(action.equals(U_Vars.location_Action))
             {
                 System.out.println("B) Ho ricevuto questo: " + action);
-//                U_Vars.dataHasBeenSavedToDB = true; //rimuovi in fase di RILASCIO
+//                U_Vars.dataHasBeenSavedToDB = true; //Commenta in fase di RILASCIO
                 U_Vars.userHasBeenLocated = true;
             }
             System.out.println("Fine Broadcast 1");
-            System.out.println("dwnl2: " + U_Vars.dataHasBeenSavedToDB);
+            System.out.println("dwnl2: "+ U_Vars.dataHasBeenSavedToDB);
             System.out.println("loc2: " + U_Vars.userHasBeenLocated);
             if((action.equals(U_Vars.download_Action) || action.equals(U_Vars.location_Action))
                     && U_Vars.dataHasBeenSavedToDB && U_Vars.userHasBeenLocated)
             {
-                System.out.println("C) Ultimo IF");
+                System.out.println("ORA PUOI FETCHARE I RISULTATI DAL DB");
                 U_Vars.loadingDone = true;
                 this.showFarms(context);
             }
@@ -68,6 +71,8 @@ public class MyReceiver extends BroadcastReceiver
     
     public void showFarms(Context context)
     {
-    
+        Intent showFarmList = new Intent(context, A_ShowPharmaciesList.class);
+        showFarmList.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(showFarmList);
     }
 }

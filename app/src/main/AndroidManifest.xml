@@ -46,7 +46,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".DetailsActivity" />
+
+        <activity android:name=".activities.A_ShowPharmaciesList" />
+
+
     </application>
 
 </manifest>

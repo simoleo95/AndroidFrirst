@@ -60,6 +60,7 @@ public class U_Location extends Activity
     private Location userLocation = new Location("Creator");
     public static String userCurrentCity = "";
     private int requestCode = 1;
+    private MyReceiver receiveIntent = new MyReceiver();
 
     public U_Location(Context context)
     {
@@ -69,7 +70,7 @@ public class U_Location extends Activity
         this.setGpsPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
         this.setLocationRequest();
-        this.createLocationCallback();
+        //this.createLocationCallback(); //HO COMMENTATO QUESTA FUNZIONE - E' UN AUTOUPDATE DELLA LOCATION VIA FUSED_CLIENT
     
         googlePlayServices = getGooglePlayServices();
         googlePlayServices.connect();
@@ -102,11 +103,8 @@ public class U_Location extends Activity
         }
         catch(IOException e)
         {
-            setUserCurrentCity("L'Aquila"); //This is BAD... but also a short fix
             return;
         }
-        setUserCurrentCity("L'Aquila"); //This is BAD... but also a short fix
-        return;
     }
     
 //PART 1 - USER LAST KNOWN LOCATION
@@ -141,6 +139,7 @@ public class U_Location extends Activity
         @Override
         public void onConnected(@Nullable Bundle bundle)
         {
+            System.out.println("CONNECTED 2 GPS VIA API # # # $ $ $ > > >");
             lastUserLocation();
         }
         
@@ -155,6 +154,7 @@ public class U_Location extends Activity
      */
     private void lastUserLocation()
     {
+        System.out.println("LAST USER LOCATION ? ? ? ^ ^ ^ ° ° °");
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             String askPermissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
@@ -308,6 +308,7 @@ public class U_Location extends Activity
      */
     public void createLocationCallback()
     {
+        System.out.println("CALLBACK ! ! ! * * * + + +");
         this.locationCallback = new LocationCallback()
         {
             @Override
@@ -316,15 +317,15 @@ public class U_Location extends Activity
                 super.onLocationResult(locationResult);
                 if(locationResult == null)
                 {
+                    System.out.println("CALLBACK null");
                     return;
                 }
                 for(Location location : locationResult.getLocations())
                 {
-                    //UPDATE THE GUI WITH LOCATION DATA HERE
                     latitudine = location.getLatitude();
                     longitudine = location.getLongitude();
                     findCity();
-                    //UPDATE THE GUI WITH LOCATION DATA HERE
+                    System.out.println("CALLBACK city: " + userCurrentCity);
                 }
             }
         };
@@ -346,16 +347,20 @@ public class U_Location extends Activity
     
     private void sendLocationAcquired_Intent()
     {
-        MyReceiver receiveIntent = new MyReceiver();
         String broadcastAction = U_Vars.location_Action;
         
         //Register the BroadcastManager
         LocalBroadcastManager.getInstance(context)
-                .registerReceiver(receiveIntent, new IntentFilter(broadcastAction));
+                .registerReceiver(this.receiveIntent, new IntentFilter(broadcastAction));
     
         //Send Intent
         LocalBroadcastManager.getInstance(context)
                 .sendBroadcast(new Intent(broadcastAction));
+    }
+    
+    public void unregisterReceiver()
+    {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(this.receiveIntent);
     }
     
     
@@ -396,14 +401,20 @@ public class U_Location extends Activity
     
     public void setUserCurrentCity(String city)
     {
-        System.out.println("- - - - - - - - >>> " + city);
-        System.out.println("- - - - - - - - > " + userCurrentCity);
-        city = city.toUpperCase();
-        if(!city.equals(this.userCurrentCity))
+        System.out.println("FOUND - - - - - >>> " + city);
+        System.out.println("CURRENT - - - - - > " + userCurrentCity);
+        if(!city.equals(""))
         {
-            this.userCurrentCity = city;
-            this.sendLocationAcquired_Intent();
+            city = city.toUpperCase();
+            if(!city.equals(this.userCurrentCity))
+            {
+                System.out.println("CHANGING!!!> ");
+                this.userCurrentCity = city;
+                this.sendLocationAcquired_Intent();
+            }
         }
+    
+        System.out.println("CURRENT NOW- - - - > " + userCurrentCity);
     }
     
     public long getGpsUpdateInterval()

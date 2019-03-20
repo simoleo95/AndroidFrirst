@@ -1,6 +1,7 @@
 package it.univaq.mobileprogramming;
 
 import android.content.Context;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,14 +29,24 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Link this class(context) to a specific XML (activity_main)
         
+        final Context context = this;
         
+//        new Thread(new Runnable()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                System.out.println("onCreate - THREAD LOCATION");
+//                Looper.prepare();
+//                location = new U_Location(context);
+//            }
+//        }).start();
         
-        location = new U_Location(this);
+        this.location = new U_Location(this);
         
         this.download = new Download(this);
-        
-        //This belongs to a different activity/class
         this.download.saveToDB();
+        System.out.println("onCreate - END FUNCTION");
     }
     
 
@@ -81,7 +92,6 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
 //
 //        System.out.println("Sono DOPO il while!!! Infatti: " + U_Vars.canShowListNow);
 //
-        
         if(U_Vars.farmacieUtente == null)
         {
             U_Vars.farmacieUtente = Arrays.asList(new E_Farmacia(13, "a", "b", "c", "a", "b", "c", "a", "b", "c", "a"));
@@ -99,6 +109,7 @@ public class MainActivity extends AppCompatActivity // <- to ensure backward com
     protected void onDestroy()
     {
         this.download.unregisterReceiver();
+        this.location.unregisterReceiver();
         location.googlePlayServices.disconnect();
         D_Database.closeConnection();
         super.onDestroy();
