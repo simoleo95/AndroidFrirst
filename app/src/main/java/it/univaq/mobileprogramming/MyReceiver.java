@@ -23,36 +23,22 @@ public class MyReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        System.out.println("dwnl: " + U_Vars.dataHasBeenSavedToDB);
-        System.out.println("loc: " + U_Vars.userHasBeenLocated);
         String action = intent.getAction();
         if(action != null)
         {
-            System.out.println("Intent iniziale: " + action);
-            System.out.println("Switch with: " + U_Vars.download_Action + ", OR " + U_Vars.location_Action);
-            
-            System.out.println("if DWNL = " + action.equals(U_Vars.download_Action));
-            System.out.println("if LOC  = " + action.equals(U_Vars.location_Action));
-            
             if(action.equals(U_Vars.download_Action))
             {
-                System.out.println("A) Ho ricevuto questo: " + action);
                 U_Vars.dataHasBeenSavedToDB = true;
             }
             else if(action.equals(U_Vars.location_Action))
             {
-                System.out.println("B) Ho ricevuto questo: " + action);
 //                U_Vars.dataHasBeenSavedToDB = true; //Commenta in fase di RILASCIO
                 U_Vars.userHasBeenLocated = true;
             }
-            System.out.println("Fine Broadcast 1");
-            System.out.println("dwnl2: "+ U_Vars.dataHasBeenSavedToDB);
-            System.out.println("loc2: " + U_Vars.userHasBeenLocated);
             if((action.equals(U_Vars.download_Action) || action.equals(U_Vars.location_Action))
                     && U_Vars.dataHasBeenSavedToDB && U_Vars.userHasBeenLocated)
             {
                 System.out.println("ORA PUOI FETCHARE I RISULTATI DAL DB");
-                U_Vars.loadingDone = true;
                 this.showFarms(context);
             }
             else
@@ -69,8 +55,30 @@ public class MyReceiver extends BroadcastReceiver
         }
     }
     
-    public void showFarms(Context context)
+    /**
+     * Fetch the pharmacies in the current city and start a new activity do display them
+     * @param context The app context
+     */
+    public void showFarms(final Context context)
     {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                System.out.println("CITTà TROVATA ALLA FINE: " + U_Vars.userCity);
+                D_Database room = D_Database.getInstance(context);
+                U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(U_Vars.userCity);
+                System.out.println("ESISTONO TANTE FARMACIE: " + U_Vars.farmacieUtente.size());
+                sendIntent(context);
+            }
+        }).start();
+
+    }
+    
+    private void sendIntent(final Context context)
+    {
+        //TODO: Prova a metterlo nel thread per assicurarti di avere preso i record dal DB
         Intent showFarmList = new Intent(context, A_ShowPharmaciesList.class);
         showFarmList.setFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(showFarmList);

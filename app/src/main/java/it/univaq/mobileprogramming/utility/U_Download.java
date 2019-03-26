@@ -1,4 +1,4 @@
-package it.univaq.mobileprogramming;
+package it.univaq.mobileprogramming.utility;
 
 
 import android.content.Context;
@@ -16,18 +16,19 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 
+import it.univaq.mobileprogramming.MyReceiver;
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 import it.univaq.mobileprogramming.utility.U_Vars;
 
 
-class Download
+public class U_Download
 {
     private Context context;
     private D_Database roomDB;
     private MyReceiver receiveIntent;
     
-    public Download(Context context)
+    public U_Download(Context context)
     {
         this.context = context;
         roomDB = D_Database.getInstance(context);
@@ -217,7 +218,7 @@ class Download
     
     /**
      * Unregister the BroadcastManager
-     * This method is called on MainActivity.onDestroy()
+     * This method is called on A_Loading.onDestroy()
      */
     public void unregisterReceiver()
     {

@@ -11,6 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -41,7 +42,7 @@ import it.univaq.mobileprogramming.MyReceiver;
 
 /**
  * This class enables to connect and disconnect from Google Play Services
- * It should be instantiated on MainActivity.onStart() calling googlePlayServices.connect()
+ * It should be instantiated on A_Loading.onStart() calling googlePlayServices.connect()
  * and then onStop() calling googlePlayServices.disconnect()
  */
 public class U_Location extends Activity
@@ -70,7 +71,7 @@ public class U_Location extends Activity
         this.setGpsPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
         this.setLocationRequest();
-        //this.createLocationCallback(); //HO COMMENTATO QUESTA FUNZIONE - E' UN AUTOUPDATE DELLA LOCATION VIA FUSED_CLIENT
+        this.createLocationCallback(); //HO COMMENTATO QUESTA FUNZIONE - E' UN AUTOUPDATE DELLA LOCATION VIA FUSED_CLIENT
     
         googlePlayServices = getGooglePlayServices();
         googlePlayServices.connect();
@@ -175,6 +176,10 @@ public class U_Location extends Activity
                             userLocation.setLongitude(location.getLongitude());
                             
                             findCity();
+                            System.out.println("Location: " + location.toString());
+                            System.out.println("LAT: " + location.getLatitude());
+                            System.out.println("LON: " + location.getLongitude());
+                            System.out.println("CITTà TROVATA: " + U_Vars.userCity);
                         }
                         
                     }
@@ -401,20 +406,20 @@ public class U_Location extends Activity
     
     public void setUserCurrentCity(String city)
     {
-        System.out.println("FOUND - - - - - >>> " + city);
-        System.out.println("CURRENT - - - - - > " + userCurrentCity);
         if(!city.equals(""))
         {
             city = city.toUpperCase();
+            if(city.equals("MOUNTAIN VIEW"))
+            {
+                city = "ROMA";
+            }
             if(!city.equals(this.userCurrentCity))
             {
-                System.out.println("CHANGING!!!> ");
                 this.userCurrentCity = city;
+                U_Vars.userCity = city;
                 this.sendLocationAcquired_Intent();
             }
         }
-    
-        System.out.println("CURRENT NOW- - - - > " + userCurrentCity);
     }
     
     public long getGpsUpdateInterval()

@@ -18,11 +18,10 @@
 
     <!-- Aggiunti questi permessi perchè Android Studio trova una location sbagliata
         Source: https://stackoverflow.com/questions/9778251/gps-wrong-location
-
+    -->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    -->
 
     <!-- Save user preferences to external Storage? -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -39,7 +38,7 @@
         <uses-library android:name="com.google.android.maps" />
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.A_Loading">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,6 +50,7 @@
         <activity android:name=".DetailsActivity" />
 
         <activity android:name=".activities.A_ShowPharmaciesList" />
+
 
 
     </application>

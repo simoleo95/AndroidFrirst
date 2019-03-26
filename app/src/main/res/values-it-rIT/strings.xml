@@ -4,9 +4,7 @@
 
     <string name="city_label">Nome Città</string>
     <string name="region_label">Nome Regione</string>
-
-
-
+    <string name="loading_Pharma">Sto caricando le Farmacie!</string>
 
 
 </resources>

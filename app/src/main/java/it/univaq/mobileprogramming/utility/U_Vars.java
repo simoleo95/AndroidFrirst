@@ -7,7 +7,7 @@ import it.univaq.mobileprogramming.entity.E_Farmacia;
 
 public class U_Vars
 {
-    /** Download - Broadcast Intent */
+    /** U_Download - Broadcast Intent */
     public static String download_Action = BuildConfig.APPLICATION_ID + ".DOWNLOAD_ENDED";
     
     /** GPS - User has been located */

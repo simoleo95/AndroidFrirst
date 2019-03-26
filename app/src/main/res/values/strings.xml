@@ -3,11 +3,7 @@
 
     <string name="city_label">City Name</string>
     <string name="region_label">Region Name</string>
-
-
-
-
-
+    <string name="loading_Pharma">Loading Pharmacies!</string>
 
 
 </resources>
