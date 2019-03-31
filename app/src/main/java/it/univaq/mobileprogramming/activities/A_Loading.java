@@ -7,6 +7,7 @@ import it.univaq.mobileprogramming.R;
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.utility.U_Location;
 import it.univaq.mobileprogramming.utility.U_Download;
+import it.univaq.mobileprogramming.utility.U_Location2;
 
 public class A_Loading extends AppCompatActivity // <- to ensure backward compability
 {
@@ -19,13 +20,10 @@ public class A_Loading extends AppCompatActivity // <- to ensure backward compab
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Link this class(context) to a specific XML (activity_main)
-//        setContentView(R.layout.activity_main); //Link this class(context) to a specific XML (activity_main)
-        
         
         this.location = new U_Location(this);
         
         this.download = new U_Download(this);
-        this.download.saveToDB();
     }
     
     @Override

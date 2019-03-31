@@ -71,7 +71,7 @@ public class U_Location extends Activity
         this.setGpsPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
         this.setLocationRequest();
-        this.createLocationCallback(); //HO COMMENTATO QUESTA FUNZIONE - E' UN AUTOUPDATE DELLA LOCATION VIA FUSED_CLIENT
+        this.createLocationCallback(); //AUTOUPDATE DELLA LOCATION VIA FUSED_CLIENT
     
         googlePlayServices = getGooglePlayServices();
         googlePlayServices.connect();
@@ -156,11 +156,12 @@ public class U_Location extends Activity
     private void lastUserLocation()
     {
         System.out.println("LAST USER LOCATION ? ? ? ^ ^ ^ ° ° °");
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            String askPermissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
+            String askPermissions[] = {Manifest.permission.ACCESS_COARSE_LOCATION};
             ActivityCompat.requestPermissions((Activity) context, askPermissions, requestCode);
-            return;
+//            return;
+            lastUserLocation();
         }
         this.getLocationProviderClient().getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>()
@@ -406,6 +407,7 @@ public class U_Location extends Activity
     
     public void setUserCurrentCity(String city)
     {
+        System.out.println("STO CERCANDO DI AGGIORNARE LA CITTà IN: " + city);
         if(!city.equals(""))
         {
             city = city.toUpperCase();

@@ -1,15 +1,12 @@
 package it.univaq.mobileprogramming;
 
-import android.support.v7.app.AppCompatActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 
+import it.univaq.mobileprogramming.activities.A_Map;
 import it.univaq.mobileprogramming.activities.A_ShowPharmaciesList;
 import it.univaq.mobileprogramming.database.D_Database;
-import it.univaq.mobileprogramming.entity.E_Farmacia;
-import it.univaq.mobileprogramming.utility.U_Location;
 import it.univaq.mobileprogramming.utility.U_Vars;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -29,6 +26,7 @@ public class MyReceiver extends BroadcastReceiver
             if(action.equals(U_Vars.download_Action))
             {
                 U_Vars.dataHasBeenSavedToDB = true;
+//                U_Vars.userHasBeenLocated = true;
             }
             else if(action.equals(U_Vars.location_Action))
             {
@@ -70,7 +68,8 @@ public class MyReceiver extends BroadcastReceiver
                 D_Database room = D_Database.getInstance(context);
                 U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(U_Vars.userCity);
                 System.out.println("ESISTONO TANTE FARMACIE: " + U_Vars.farmacieUtente.size());
-                sendIntent(context);
+//                sendIntent(context);
+                showMap(context);
             }
         }).start();
 
@@ -82,5 +81,13 @@ public class MyReceiver extends BroadcastReceiver
         Intent showFarmList = new Intent(context, A_ShowPharmaciesList.class);
         showFarmList.setFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(showFarmList);
+    }
+    
+    
+    private void showMap(Context context)
+    {
+        Intent showMap = new Intent(context, A_Map.class);
+        showMap.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(showMap);
     }
 }

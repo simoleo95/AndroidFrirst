@@ -35,6 +35,7 @@ public class U_Download
         
         //Register the Intent Broadcast receiver
         this.registerReceiver();
+        saveToDB();
     }
     
     
@@ -43,7 +44,7 @@ public class U_Download
      * Putting a thread is way more effective than following this: https://stackoverflow.com/questions/25093546/android-os-networkonmainthreadexception-at-android-os-strictmodeandroidblockgua
      * Simply looking at https://developer.android.com/reference/android/os/StrictMode it's recommended Thread or AsyncTask over StrictMode
      */
-    public void saveToDB()
+    private void saveToDB()
     {
         new Thread(new Runnable()
         {
@@ -82,7 +83,6 @@ public class U_Download
                                                      .withIgnoreEmptyLines() //Returns a new CSVFormat with the "empty line skipping" behavior of the format set to true
             );
             
-            int i = 0;
             for(CSVRecord record : parser)
             {
                 safeExcelReader(record);
@@ -95,43 +95,6 @@ public class U_Download
             e.printStackTrace();
         }
     }
-    
-    /**
-     * Debug only
-     */
-    private void showRecords()
-    {
-//        E_Farmacia[] EF1 = roomDB.D_Farmacia_Access().getAllPharmaciesIn("TORINO");
-//        int max = 15;
-//        for(int i = 0; i < max; i++)
-//        {
-//            showF(EF1, i);
-//
-//        }
-//        int sizeF = EF1.size();
-//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-//        System.out.println("Total pharms now = " + sizeF);
-//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-//        for(int i = 0; i < max; i++)
-//        {
-//            showF(EF1, sizeF - 5 + i);
-//
-//        }
-//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-//        System.out.println(" - - - - - - - - - - - - - - - - - - - - - - ");
-    }
-    
-    private void showF(List<E_Farmacia> EF1, int i)
-    {
-        System.out.println("i = " + i + "\n ID = " + EF1.get(i).getId() +
-                                   ", Indirizzo: " + EF1.get(i).getIndirizzo() +
-                                   ", Comune: " + EF1.get(i).getComune() +
-                                   ", IVA: " + EF1.get(i).getIva() +
-                                   ", Lat: " + EF1.get(i).getLatitudine());
-    }
-    
     
     /**
      * Parse each record and save it to a temporary array

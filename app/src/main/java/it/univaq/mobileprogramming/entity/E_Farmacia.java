@@ -195,6 +195,11 @@ public class E_Farmacia
         return latitudine;
     }
     
+    public double getLat_Double()
+    {
+        return Double.valueOf(latitudine.replace(',', '.'));
+    }
+    
     public void setLatitudine(String latitudine)
     {
         this.latitudine = latitudine;
@@ -203,6 +208,12 @@ public class E_Farmacia
     public String getLongitudine()
     {
         return longitudine;
+    }
+    
+    
+    public double getLon_Double()
+    {
+        return Double.valueOf(longitudine.replace(",", "."));
     }
     
     public void setLongitudine(String longitudine)
