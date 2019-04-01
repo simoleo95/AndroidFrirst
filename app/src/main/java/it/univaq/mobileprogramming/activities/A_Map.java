@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -18,9 +19,12 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.AttributeSet;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -49,10 +53,16 @@ public class A_Map extends FragmentActivity implements OnMapReadyCallback, U_Loc
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        if(mapFragment != null) mapFragment.getMapAsync(this);
-        System.out.println("Fine onCreate Mappa");
-    
-    
+        if(mapFragment != null)
+        {
+            mapFragment.getMapAsync(this);
+        }
+        else
+        {
+            System.out.println("HA RITORNATO null DI NUOVOOOoooooOOOoOooOOooooOOOOooooOOOooOoOOoooOOooOoOoO!");
+        }
+        
+        
         System.out.println("STUPIDA CITTà: " + U_Vars.userCity);
         System.out.println("STUPIDA LAT: " + U_Vars.farmacieUtente.get(0).getLat_Double());
         System.out.println("STUPIDA LON: " + U_Vars.farmacieUtente.get(0).getLon_Double());
@@ -62,8 +72,8 @@ public class A_Map extends FragmentActivity implements OnMapReadyCallback, U_Loc
     protected void onResume()
     {
         super.onResume();
-        
-        
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+    
 //        if(U_Vars.loadBoolean(getApplicationContext(), U_Vars.SWITCH_LOCATION, true))
 //        {
 //            startGPS();
