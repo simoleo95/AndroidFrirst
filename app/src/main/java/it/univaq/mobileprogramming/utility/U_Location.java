@@ -66,8 +66,8 @@ public class U_Location extends Activity
     public U_Location(Context context)
     {
         this.context = context;
-        this.setGpsUpdateInterval(1000);
-        this.setGpsFastestUpdateInterval(500);
+        this.setGpsUpdateInterval(10000);
+        this.setGpsFastestUpdateInterval(5000);
         this.setGpsPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
         this.setLocationRequest();
