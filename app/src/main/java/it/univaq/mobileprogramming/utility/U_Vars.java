@@ -23,12 +23,10 @@ public class U_Vars
     /** MyReceiver - Finished using GPS and located the user*/
     public static boolean userHasBeenLocated = false;
     
-    public static final String USER_CITY = "User_City";
     public static String userCity;
-    public static Double chosenPharm_LAT;
-    public static Double chosenPharm_LON;
     
     public static List<E_Farmacia> farmacieUtente;
+    public static E_Farmacia selectedPharm;
     
     public static final String LAST_ACCESS = "last_access_time"; // Used to save the last timestamp when the user open the app
     public static final String FIRST_TIME = "first_time"; // Used to remember if is the first time that the user open the app

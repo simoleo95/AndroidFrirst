@@ -7,7 +7,6 @@ import it.univaq.mobileprogramming.R;
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.utility.U_Location;
 import it.univaq.mobileprogramming.utility.U_Download;
-import it.univaq.mobileprogramming.utility.U_Location2;
 
 public class A_Loading extends AppCompatActivity // <- to ensure backward compability
 {

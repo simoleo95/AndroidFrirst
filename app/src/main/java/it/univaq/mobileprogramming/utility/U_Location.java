@@ -66,8 +66,8 @@ public class U_Location extends Activity
     public U_Location(Context context)
     {
         this.context = context;
-        this.setGpsUpdateInterval(10000);
-        this.setGpsFastestUpdateInterval(5000);
+        this.setGpsUpdateInterval(1000);
+        this.setGpsFastestUpdateInterval(500);
         this.setGpsPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
         this.setLocationRequest();
@@ -175,10 +175,10 @@ public class U_Location extends Activity
                             userLocation.setLongitude(location.getLongitude());
                             
                             findCity();
-//                            System.out.println("Location: " + location.toString());
-//                            System.out.println("LAT: " + location.getLatitude());
-//                            System.out.println("LON: " + location.getLongitude());
-//                            System.out.println("CITTà TROVATA: " + U_Vars.userCity);
+                            System.out.println("Location: " + location.toString());
+                            System.out.println("LAT: " + location.getLatitude());
+                            System.out.println("LON: " + location.getLongitude());
+                            System.out.println("CITTà TROVATA: " + U_Vars.userCity);
                         }
                         
                     }

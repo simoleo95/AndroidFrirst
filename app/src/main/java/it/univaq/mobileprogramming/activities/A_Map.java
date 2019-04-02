@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import it.univaq.mobileprogramming.R;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
-import it.univaq.mobileprogramming.utility.U_Location2;
 import it.univaq.mobileprogramming.utility.U_Vars;
 
 public class A_Map extends FragmentActivity implements OnMapReadyCallback
@@ -118,7 +117,7 @@ public class A_Map extends FragmentActivity implements OnMapReadyCallback
             if(marker2add.latitude == getIntent().getDoubleExtra("lat", this.default_LAT)
                     && marker2add.longitude == getIntent().getDoubleExtra("lon", this.default_LON))
             {
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                 this.zoomOnCity();
             }
             else

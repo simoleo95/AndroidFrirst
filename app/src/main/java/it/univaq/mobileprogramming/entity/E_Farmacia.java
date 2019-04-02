@@ -87,18 +87,6 @@ public class E_Farmacia
         this.longitudine = longitudine;
     }
     
-    public void setAsFavourite(D_Database room)
-    {
-        E_Preferita pref = new E_Preferita(this.id);
-        room.D_Preferita_Access().setAsFavourite(pref);
-    }
-    
-    public void removeFromFavourites(D_Database room)
-    {
-        E_Preferita pref = new E_Preferita(this.id);
-        room.D_Preferita_Access().removeFromFavourite(pref);
-    }
-    
     
     public long getId()
     {

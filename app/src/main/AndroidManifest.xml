@@ -63,7 +63,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DetailsActivity" />
+        <activity android:name=".activities.A_PharmDetails" />
 
         <activity android:name=".activities.A_ShowPharmaciesList" />
         <activity android:name=".activities.A_Map" />

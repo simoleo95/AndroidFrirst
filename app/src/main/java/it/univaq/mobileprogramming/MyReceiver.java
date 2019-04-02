@@ -38,18 +38,18 @@ public class MyReceiver extends BroadcastReceiver
             {
                 this.showFarms(context);
             }
-            else
-            {
-                System.out.println((action.equals(U_Vars.download_Action)
-                        + " OR " + action.equals(U_Vars.location_Action))
-                        + " AND " + U_Vars.dataHasBeenSavedToDB
-                        + " AND " + U_Vars.userHasBeenLocated);
-            }
+//            else
+//            {
+//                System.out.println((action.equals(U_Vars.download_Action)
+//                        + " OR " + action.equals(U_Vars.location_Action))
+//                        + " AND " + U_Vars.dataHasBeenSavedToDB
+//                        + " AND " + U_Vars.userHasBeenLocated);
+//            }
         }
-        else
-        {
-            System.out.println("Non ho ricevuto niente sob :(");
-        }
+//        else
+//        {
+//            System.out.println("Non ho ricevuto niente sob :(");
+//        }
     }
     
     /**
@@ -63,12 +63,9 @@ public class MyReceiver extends BroadcastReceiver
             @Override
             public void run()
             {
-                System.out.println("CITTà TROVATA ALLA FINE: " + U_Vars.userCity);
                 D_Database room = D_Database.getInstance(context);
                 U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(U_Vars.userCity);
-                System.out.println("ESISTONO TANTE FARMACIE: " + U_Vars.farmacieUtente.size());
                 sendIntent(context);
-//                showMap(context);
             }
         }).start();
 
@@ -76,17 +73,8 @@ public class MyReceiver extends BroadcastReceiver
     
     private void sendIntent(final Context context)
     {
-        //TODO: Prova a metterlo nel thread per assicurarti di avere preso i record dal DB
         Intent showFarmList = new Intent(context, A_ShowPharmaciesList.class);
         showFarmList.setFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(showFarmList);
-    }
-    
-    
-    private void showMap(Context context)
-    {
-        Intent showMap = new Intent(context, A_Map.class);
-        showMap.addFlags(FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(showMap);
     }
 }

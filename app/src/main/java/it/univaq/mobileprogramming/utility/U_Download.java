@@ -51,7 +51,7 @@ public class U_Download
             @Override
             public void run()
             {
-//                csvParser(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
+                csvParser(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
                 signal_ParsingFinished();
             }
         }).start();

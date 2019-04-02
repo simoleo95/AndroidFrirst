@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">PHARMA CIA</string>
-
-    <string name="city_label">City Name</string>
-    <string name="region_label">Region Name</string>
     <string name="loading_Pharma">Loading Pharmacies!</string>
     <string name="Google_API_Key" translatable="false">AIzaSyC7RHd_WWCTD3xfnI6SlAMIIdP6HbkECxo</string>
 
+
+    <string name="city_label">City Name</string>
+    <string name="region_label">Region Name</string>
 
 </resources>
