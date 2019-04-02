@@ -25,6 +25,8 @@ public class U_Vars
     
     public static final String USER_CITY = "User_City";
     public static String userCity;
+    public static Double chosenPharm_LAT;
+    public static Double chosenPharm_LON;
     
     public static List<E_Farmacia> farmacieUtente;
     

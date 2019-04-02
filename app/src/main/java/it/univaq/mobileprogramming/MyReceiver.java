@@ -36,7 +36,6 @@ public class MyReceiver extends BroadcastReceiver
             if((action.equals(U_Vars.download_Action) || action.equals(U_Vars.location_Action))
                     && U_Vars.dataHasBeenSavedToDB && U_Vars.userHasBeenLocated)
             {
-                System.out.println("ORA PUOI FETCHARE I RISULTATI DAL DB");
                 this.showFarms(context);
             }
             else
@@ -68,8 +67,8 @@ public class MyReceiver extends BroadcastReceiver
                 D_Database room = D_Database.getInstance(context);
                 U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(U_Vars.userCity);
                 System.out.println("ESISTONO TANTE FARMACIE: " + U_Vars.farmacieUtente.size());
-//                sendIntent(context);
-                showMap(context);
+                sendIntent(context);
+//                showMap(context);
             }
         }).start();
 

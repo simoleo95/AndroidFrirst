@@ -27,21 +27,24 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import it.univaq.mobileprogramming.R;
+import it.univaq.mobileprogramming.entity.E_Farmacia;
 import it.univaq.mobileprogramming.utility.U_Location2;
 import it.univaq.mobileprogramming.utility.U_Vars;
 
-public class A_Map extends FragmentActivity implements OnMapReadyCallback, U_Location2.LocationListener
+public class A_Map extends FragmentActivity implements OnMapReadyCallback
 {
     private GoogleMap mMap;
     private Marker marker;
     private final int notification_id = 1;
-    private MyListener listener = new MyListener();
-    private U_Location2 locationService;
+    private double default_LAT = 0;
+    private double default_LON = 0;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -68,62 +71,6 @@ public class A_Map extends FragmentActivity implements OnMapReadyCallback, U_Loc
         System.out.println("STUPIDA LON: " + U_Vars.farmacieUtente.get(0).getLon_Double());
     }
     
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-    
-//        if(U_Vars.loadBoolean(getApplicationContext(), U_Vars.SWITCH_LOCATION, true))
-//        {
-//            startGPS();
-//            System.out.println("Avviato il GPS!!!");
-//            System.out.println("Avviata la Location2!!! P1");
-////            locationService = new U_Location2();
-////            locationService.onCreate(this, this);
-////            locationService.requestLocationUpdates(this);
-//        }
-//        else
-//        {
-//            System.out.println("Avviata la Location2!!! P2");
-////            locationService = new U_Location2();
-////            locationService.onCreate(this, this);
-//            locationService.requestLocationUpdates(this);
-//        }
-    }
-    
-    @Override
-    protected void onStop() {
-        super.onStop();
-        
-//        if(U_Vars.loadBoolean(getApplicationContext(), U_Vars.SWITCH_LOCATION, true)) {
-//            stopGPS();
-//        }
-//        else
-//        {
-//            locationService.stopLocationUpdates(this);
-//            locationService.unregisterReceiver();
-//        }
-    }
-    
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        
-        if(requestCode == 1)
-        {
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                startGPS();
-            }
-            else
-            {
-                finish();
-            }
-        }
-    }
-    
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -137,157 +84,49 @@ public class A_Map extends FragmentActivity implements OnMapReadyCallback, U_Loc
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
-    
-//        String city = getIntent().getStringExtra("cityName");
-//        String region = getIntent().getStringExtra("regionName");
-//        double latitude = getIntent().getDoubleExtra("latitude", 0);
-//        double longitude = getIntent().getDoubleExtra("longitude", 0);
-        String city = U_Vars.userCity;
-        
-        double latitude = U_Vars.farmacieUtente.get(0).getLat_Double();
-        double longitude = U_Vars.farmacieUtente.get(0).getLon_Double();
-        System.out.println("HO TROVATO UNA DANNATA CITTà DA MOSTRARE SULLA MAPPA!!!");
-        System.out.println("DANNATA CITTà: " + city);
-        System.out.println("DANNATA LAT: " + latitude);
-        System.out.println("DANNATA LON" + longitude);
-        
-        if(city == null) return;
-        
-        LatLng position = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(position).title(city));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+        this.showPharms();
     }
     
     /**
-     *  This is the lister used only by GooglePlayService
-     * @param location
+     * Zoom on the user city
      */
-    @Override
-    public void onLocationChanged(Location location)
+    private void zoomOnCity()
     {
-        if(marker == null)
-        {
-            marker = mMap.addMarker(new MarkerOptions()
-                                            .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                                            .title("My Location")
-            );
-        }
-        else
-        {
-            marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-        }
-        notifyLocation(location.getLatitude() + ", " + location.getLongitude());
+        LatLng cityLL = new LatLng(
+                getIntent().getDoubleExtra("lat", this.default_LAT),
+                getIntent().getDoubleExtra("lon", this.default_LON));
+//                getIntent().getDoubleExtra("lat", 42.3498479), //L'Aquila LAT
+//                getIntent().getDoubleExtra("lon", 13.3995091));//L'Aquila LON
+        
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cityLL, 15));
     }
     
-    /**
-     * Start Location Service by GPS and Network provider.
-     */
-    private void startGPS()
+    private void showPharms()
     {
-        System.out.println("QUI NON CI DOVRESTI ARRIVARE PERCHè ATTIVI IL GPS FARLOCCO!");
-        LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        
-        int check = ContextCompat
-                .checkSelfPermission(getApplicationContext(),
-                                     Manifest.permission.ACCESS_FINE_LOCATION);
-        if(check == PackageManager.PERMISSION_GRANTED) {
+        E_Farmacia farmacia;
+        for(int i = 0; i < U_Vars.farmacieUtente.size(); i++)
+        {
+            farmacia = U_Vars.farmacieUtente.get(i);
+            LatLng marker2add = new LatLng(farmacia.getLat_Double(), farmacia.getLon_Double());
             
-            notifyLocation("GPS ATTIVO");
-            if(manager != null) {
-                manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                                               0,
-                                               0,
-                                               listener);
-                
-                manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                                               0,
-                                               0,
-                                               listener);
-            }
-        }
-        else
-        {
-            ActivityCompat.requestPermissions(A_Map.this,
-                                              new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, 1);
-        }
-    }
-    
-    /**
-     * Stop Location service.
-     */
-    private void stopGPS()
-    {
-        LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if(manager != null) manager.removeUpdates(listener);
-        
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if(notificationManager != null) notificationManager.cancel(notification_id);
-    }
-    
-    /**
-     * Publish a notify.
-     *
-     * @param message
-     */
-    private void notifyLocation(String message) {
-        
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            NotificationChannel channel = new NotificationChannel("myChannel", "Il Mio Canale", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setLightColor(Color.argb(255, 255, 0, 0));
-            if(notificationManager != null) notificationManager.createNotificationChannel(channel);
-        }
-        
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                getApplicationContext(), "myChannel");
-        builder.setContentTitle(getString(R.string.app_name));
-//        builder.setSmallIcon(R.drawable.ic_stat_name);
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-        
-        Intent intent = new Intent(getApplicationContext(), A_Map.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                getApplicationContext(), 0, intent, 0);
-        
-        builder.setContentIntent(pendingIntent);
-        
-        Notification notify = builder.build();
-        if(notificationManager != null) notificationManager.notify(notification_id, notify);
-    }
-    
-    /**
-     * Location Listener
-     */
-    private class MyListener implements LocationListener
-    {
-        @Override
-        public void onLocationChanged(Location location)
-        {
-            if(marker == null)
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(marker2add);
+            
+            markerOptions.title(farmacia.getFarmacia());
+            markerOptions.snippet(farmacia.getIndirizzo());
+            
+            if(marker2add.latitude == getIntent().getDoubleExtra("lat", this.default_LAT)
+                    && marker2add.longitude == getIntent().getDoubleExtra("lon", this.default_LON))
             {
-                marker = mMap.addMarker(new MarkerOptions()
-                                                .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                                                .title("My Location")
-                );
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                this.zoomOnCity();
             }
             else
             {
-                marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             }
-            notifyLocation(location.getLatitude() + ", " + location.getLongitude());
+            
+            mMap.addMarker(markerOptions);
         }
-        
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-        
-        @Override
-        public void onProviderEnabled(String provider) {}
-        
-        @Override
-        public void onProviderDisabled(String provider) {}
     }
 }

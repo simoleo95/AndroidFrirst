@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import it.univaq.mobileprogramming.activities.A_Map;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder>
@@ -70,10 +71,10 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
                 {
                     E_Farmacia farmacia = data.get(getAdapterPosition());
                     
-                    Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+                    Intent intent = new Intent(v.getContext(), A_Map.class);
                     //Retrieve the user clicked element and pass the information to the intent
-                    intent.putExtra("cityName", farmacia.getFarmacia());
-                    intent.putExtra("userCurrentCity", farmacia.getIndirizzo());
+                    intent.putExtra("lat", farmacia.getLat_Double());
+                    intent.putExtra("lon", farmacia.getLon_Double());
                     
                     v.getContext()
                             .startActivity(intent);

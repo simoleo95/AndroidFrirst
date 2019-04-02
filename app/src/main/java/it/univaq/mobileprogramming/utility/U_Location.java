@@ -140,7 +140,6 @@ public class U_Location extends Activity
         @Override
         public void onConnected(@Nullable Bundle bundle)
         {
-            System.out.println("CONNECTED 2 GPS VIA API # # # $ $ $ > > >");
             lastUserLocation();
         }
         
@@ -155,7 +154,6 @@ public class U_Location extends Activity
      */
     private void lastUserLocation()
     {
-        System.out.println("LAST USER LOCATION ? ? ? ^ ^ ^ ° ° °");
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             String askPermissions[] = {Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -177,10 +175,10 @@ public class U_Location extends Activity
                             userLocation.setLongitude(location.getLongitude());
                             
                             findCity();
-                            System.out.println("Location: " + location.toString());
-                            System.out.println("LAT: " + location.getLatitude());
-                            System.out.println("LON: " + location.getLongitude());
-                            System.out.println("CITTà TROVATA: " + U_Vars.userCity);
+//                            System.out.println("Location: " + location.toString());
+//                            System.out.println("LAT: " + location.getLatitude());
+//                            System.out.println("LON: " + location.getLongitude());
+//                            System.out.println("CITTà TROVATA: " + U_Vars.userCity);
                         }
                         
                     }
@@ -314,7 +312,6 @@ public class U_Location extends Activity
      */
     public void createLocationCallback()
     {
-        System.out.println("CALLBACK ! ! ! * * * + + +");
         this.locationCallback = new LocationCallback()
         {
             @Override
@@ -323,7 +320,6 @@ public class U_Location extends Activity
                 super.onLocationResult(locationResult);
                 if(locationResult == null)
                 {
-                    System.out.println("CALLBACK null");
                     return;
                 }
                 for(Location location : locationResult.getLocations())
@@ -331,7 +327,6 @@ public class U_Location extends Activity
                     latitudine = location.getLatitude();
                     longitudine = location.getLongitude();
                     findCity();
-                    System.out.println("CALLBACK city: " + userCurrentCity);
                 }
             }
         };
@@ -407,11 +402,10 @@ public class U_Location extends Activity
     
     public void setUserCurrentCity(String city)
     {
-        System.out.println("STO CERCANDO DI AGGIORNARE LA CITTà IN: " + city);
         if(!city.equals(""))
         {
-            city = city.toUpperCase();
-            if(city.equals("MOUNTAIN VIEW"))
+            city = city.toUpperCase(); //To match the DB records
+            if(city.equals("MOUNTAIN VIEW")) //New versions bug
             {
                 city = "ROMA";
             }
