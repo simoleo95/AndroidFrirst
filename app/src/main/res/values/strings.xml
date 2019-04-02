@@ -4,7 +4,17 @@
     <string name="Google_API_Key" translatable="false">AIzaSyC7RHd_WWCTD3xfnI6SlAMIIdP6HbkECxo</string>
 
 
-    <string name="city_label">City Name</string>
-    <string name="region_label">Region Name</string>
+    <string name="name">Name</string>
+    <string name="address">Address</string>
+    <string name="iva" translatable="false">Partita IVA</string>
+    <string name="city">City</string>
+    <string name="subcity">Subcity</string>
+    <string name="provence">Provence</string>
+    <string name="region">Region</string>
+    <string name="dateStart">Activity started on</string>
+    <string name="lat">Latitude</string>
+    <string name="lon">Longitude</string>
+
+    <string name="showOnMap">Show on Map!</string>
 
 </resources>

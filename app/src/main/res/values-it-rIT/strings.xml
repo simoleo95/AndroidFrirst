@@ -2,9 +2,17 @@
 <resources>
     <string name="app_name">PARMA CIA</string>
 
-    <string name="city_label">Nome Città</string>
-    <string name="region_label">Nome Regione</string>
     <string name="loading_Pharma">Sto caricando le Farmacie!</string>
+    <string name="name">Nome</string>
+    <string name="address">Indirizzo</string>
+    <string name="city">Città</string>
+    <string name="subcity">Frazione</string>
+    <string name="provence">Provincia</string>
+    <string name="region">Regione</string>
+    <string name="dateStart">Data inizio attività</string>
+    <string name="lat">Latitudine</string>
+    <string name="lon">Longitudine</string>
+    <string name="showOnMap">Mostra sulla mappa!</string>
 
 
 </resources>

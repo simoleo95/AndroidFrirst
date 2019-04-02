@@ -14,12 +14,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.List;
 
 import it.univaq.mobileprogramming.MyReceiver;
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
-import it.univaq.mobileprogramming.utility.U_Vars;
 
 
 public class U_Download
@@ -35,7 +33,7 @@ public class U_Download
         
         //Register the Intent Broadcast receiver
         this.registerReceiver();
-        saveToDB();
+        updateDB();
     }
     
     
@@ -44,14 +42,14 @@ public class U_Download
      * Putting a thread is way more effective than following this: https://stackoverflow.com/questions/25093546/android-os-networkonmainthreadexception-at-android-os-strictmodeandroidblockgua
      * Simply looking at https://developer.android.com/reference/android/os/StrictMode it's recommended Thread or AsyncTask over StrictMode
      */
-    private void saveToDB()
+    private void updateDB()
     {
         new Thread(new Runnable()
         {
             @Override
             public void run()
             {
-                csvParser(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
+                downloadAndSave(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
                 signal_ParsingFinished();
             }
         }).start();
@@ -62,7 +60,7 @@ public class U_Download
      * Function based on https://stackoverflow.com/questions/4120942/programatically-downloading-csv-files-with-java
      * This function is NOT thread safe. In order to run it correctly it needs to be put in a thread
      */
-    private void csvParser()
+    private void downloadAndSave()
     {
         String url_csv = "http://www.dati.salute.gov.it/imgs/C_17_dataset_5_download_itemDownload0_upFile.CSV";
         URL url = null;

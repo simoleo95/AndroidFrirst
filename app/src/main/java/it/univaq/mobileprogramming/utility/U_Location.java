@@ -66,9 +66,6 @@ public class U_Location extends Activity
     public U_Location(Context context)
     {
         this.context = context;
-        this.setGpsUpdateInterval(1000);
-        this.setGpsFastestUpdateInterval(500);
-        this.setGpsPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
         this.setLocationRequest();
         this.createLocationCallback(); //AUTOUPDATE DELLA LOCATION VIA FUSED_CLIENT
@@ -340,9 +337,9 @@ public class U_Location extends Activity
     public void setLocationRequest()
     {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(this.getGpsUpdateInterval());
-        locationRequest.setFastestInterval(this.getGpsFastestUpdateInterval());
-        locationRequest.setPriority(this.getGpsPriority());
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(500);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         this.locationRequest = locationRequest;
     }
     
@@ -407,7 +404,7 @@ public class U_Location extends Activity
             city = city.toUpperCase(); //To match the DB records
             if(city.equals("MOUNTAIN VIEW")) //New versions bug
             {
-                city = "ROMA";
+                city = "L'AQUILA";
             }
             if(!city.equals(this.userCurrentCity))
             {

@@ -41,9 +41,8 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     {
         //This function will ITERATE itself on EACH element present in farmacia[] array
         E_Farmacia farmacia = data.get(i);
-        viewHolder.title.setText(farmacia.getFarmacia());
-        viewHolder.subtitle.setText(farmacia.getIndirizzo());
-        
+        viewHolder.pharmacy.setText(farmacia.getFarmacia());
+        viewHolder.address.setText(farmacia.getIndirizzo());
     }
     
     @Override
@@ -55,16 +54,16 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     //This class is like a OnClick_doThings
     class ViewHolder extends RecyclerView.ViewHolder
     {
-        TextView title;
-        TextView subtitle;
+        TextView pharmacy;
+        TextView address;
         
         public ViewHolder(@NonNull View view)
         {
             super(view);
             
             //Search for these values inside the adapter.xml (linked in onCreateViewHolder)
-            title = view.findViewById(R.id.title);
-            subtitle = view.findViewById(R.id.subtitle);
+            pharmacy = view.findViewById(R.id.title);
+            address  = view.findViewById(R.id.subtitle);
             
             view.setOnClickListener(new View.OnClickListener() //This is an interface with only onClick method to be implemented
             {
