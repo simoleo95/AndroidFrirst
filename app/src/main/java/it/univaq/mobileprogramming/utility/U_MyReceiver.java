@@ -1,4 +1,4 @@
-package it.univaq.mobileprogramming;
+package it.univaq.mobileprogramming.utility;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +15,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * This class updates the map when a specific Broadcast Intent is received
  * The specific intent is sent after finishing to parse Pharmacies into the DB
  */
-public class MyReceiver extends BroadcastReceiver
+public class U_MyReceiver extends BroadcastReceiver
 {
     @Override
     public void onReceive(Context context, Intent intent)
@@ -68,7 +68,6 @@ public class MyReceiver extends BroadcastReceiver
                 sendIntent(context);
             }
         }).start();
-
     }
     
     private void sendIntent(final Context context)

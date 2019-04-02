@@ -1,5 +1,8 @@
 package it.univaq.mobileprogramming.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -7,6 +10,7 @@ import it.univaq.mobileprogramming.R;
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.utility.U_Location;
 import it.univaq.mobileprogramming.utility.U_Download;
+import it.univaq.mobileprogramming.utility.U_Vars;
 
 public class A_Loading extends AppCompatActivity // <- to ensure backward compability
 {
@@ -19,18 +23,19 @@ public class A_Loading extends AppCompatActivity // <- to ensure backward compab
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Link this class(context) to a specific XML (activity_main)
-        
-        this.location = new U_Location(this);
-        
-        this.download = new U_Download(this);
+    
+        U_Vars.db_updated = false;
+        this.askForAllPermissions();
     }
+    
     
     @Override
-    protected void onStart()
+    public void onResume()
     {
-        super.onStart();
+        super.onResume();
+        this.location = new U_Location(this);
+        this.download = new U_Download(this);
     }
-    
     
     
     @Override
@@ -41,5 +46,15 @@ public class A_Loading extends AppCompatActivity // <- to ensure backward compab
         location.googlePlayServices.disconnect();
         D_Database.closeConnection();
         super.onDestroy();
+    }
+    
+    
+    private void askForAllPermissions()
+    {
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            String askPermissions[] = {Manifest.permission.ACCESS_COARSE_LOCATION};
+            ActivityCompat.requestPermissions(this, askPermissions, U_Vars.requestCode);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package it.univaq.mobileprogramming;
+package it.univaq.mobileprogramming.utility;
 
 
 import android.content.Intent;
@@ -11,17 +11,16 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import it.univaq.mobileprogramming.activities.A_Map;
+import it.univaq.mobileprogramming.R;
 import it.univaq.mobileprogramming.activities.A_PharmDetails;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
-import it.univaq.mobileprogramming.utility.U_Vars;
 
-public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder>
+public class U_AdapterRecycler extends RecyclerView.Adapter<U_AdapterRecycler.ViewHolder>
 {
     //Source: https://developer.android.com/guide/topics/ui/layout/recyclerview
     private List<E_Farmacia> data;
     
-    public AdapterRecycler(List<E_Farmacia> data)
+    public U_AdapterRecycler(List<E_Farmacia> data)
     {
         this.data = data;
     }

@@ -15,7 +15,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import it.univaq.mobileprogramming.MyReceiver;
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
 
@@ -24,7 +23,7 @@ public class U_Download
 {
     private Context context;
     private D_Database roomDB;
-    private MyReceiver receiveIntent;
+    private U_MyReceiver receiveIntent;
     
     public U_Download(Context context)
     {
@@ -33,7 +32,16 @@ public class U_Download
         
         //Register the Intent Broadcast receiver
         this.registerReceiver();
-        updateDB();
+        
+        if(U_Vars.db_updated == false)
+        {
+            updateDB();
+        }
+        else
+        {
+            signal_ParsingFinished();
+        }
+        
     }
     
     
@@ -162,6 +170,7 @@ public class U_Download
     {
         Intent updateMap = new Intent(U_Vars.download_Action);
         LocalBroadcastManager.getInstance(context).sendBroadcast(updateMap);
+        U_Vars.db_updated = true;
     }
     
     
@@ -171,7 +180,7 @@ public class U_Download
     private void registerReceiver()
     {
         //https://codelabs.developers.google.com/codelabs/android-training-broadcast-receivers/index.html?index=..%2F..%2Fandroid-training#3
-        this.receiveIntent = new MyReceiver();
+        this.receiveIntent = new U_MyReceiver();
         LocalBroadcastManager.getInstance(context)
                 .registerReceiver(this.receiveIntent, new IntentFilter(U_Vars.download_Action));
     }

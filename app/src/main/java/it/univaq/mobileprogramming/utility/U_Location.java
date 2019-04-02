@@ -1,6 +1,5 @@
 package it.univaq.mobileprogramming.utility;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +10,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,7 +19,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -38,7 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import it.univaq.mobileprogramming.MyReceiver;
+import it.univaq.mobileprogramming.activities.A_Loading;
 
 /**
  * This class enables to connect and disconnect from Google Play Services
@@ -55,26 +50,24 @@ public class U_Location extends Activity
     private long gpsUpdateInterval;
     private long gpsFastestUpdateInterval;
     private int gpsPriority;
+    private Location currentLocation;
     
     private Double latitudine;
     private Double longitudine;
     private Location userLocation = new Location("Creator");
     public static String userCurrentCity = "";
-    private int requestCode = 1;
-    private MyReceiver receiveIntent = new MyReceiver();
+    private U_MyReceiver receiveIntent = new U_MyReceiver();
 
     public U_Location(Context context)
     {
         this.context = context;
-        this.setLocationProviderClient(LocationServices.getFusedLocationProviderClient(context));
-        this.setLocationRequest();
-        this.createLocationCallback(); //AUTOUPDATE DELLA LOCATION VIA FUSED_CLIENT
-    
         googlePlayServices = getGooglePlayServices();
         googlePlayServices.connect();
         
+        this.locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+//        lastUserLocation();
+        
         getUserCurrentLocation();
-        lastUserLocation();
     }
     
     
@@ -151,67 +144,71 @@ public class U_Location extends Activity
      */
     private void lastUserLocation()
     {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        try
         {
-            String askPermissions[] = {Manifest.permission.ACCESS_COARSE_LOCATION};
-            ActivityCompat.requestPermissions((Activity) context, askPermissions, requestCode);
-//            return;
-            lastUserLocation();
-        }
-        this.getLocationProviderClient().getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>()
-                {
-                    @Override
-                    public void onSuccess(Location location)
+            this.locationProviderClient
+                    .getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>()
                     {
-                        if (location != null)
+                        @Override
+                        public void onSuccess(Location location)
                         {
-                            setLatitudine(location.getLatitude());
-                            setLongitudine(location.getLongitude());
-                            userLocation.setLatitude(location.getLatitude());
-                            userLocation.setLongitude(location.getLongitude());
-                            
-                            findCity();
-                            System.out.println("Location: " + location.toString());
-                            System.out.println("LAT: " + location.getLatitude());
-                            System.out.println("LON: " + location.getLongitude());
-                            System.out.println("CITTà TROVATA: " + U_Vars.userCity);
+                            if(location != null)
+                            {
+                                currentLocation = location;
+                                setLatitudine(location.getLatitude());
+                                setLongitudine(location.getLongitude());
+                                userLocation.setLatitude(location.getLatitude());
+                                userLocation.setLongitude(location.getLongitude());
+    
+                                findCity();
+                                System.out.println("Location: " + location.toString());
+                                System.out.println("LAT: " + location.getLatitude());
+                                System.out.println("LON: " + location.getLongitude());
+                                System.out.println("CITTà TROVATA: " + U_Vars.userCity);
+                            }
                         }
-                        
-                    }
-                });
+                    });
+        }
+        catch(SecurityException s)
+        {
+            Intent intent = new Intent(context, A_Loading.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            finish(); //Eccezione! Chiude l'activity corrente e torna a quella iniziale
+            context.startActivity(intent);
+        }
     }
     
-    /**
-     * Called after the user has been prompted to grand permissions
-     *
-     * @param requestCode the same code put into the ActivityCompat.requestPermissions()
-     * @param permissions needed permission to run the activity/app
-     * @param grantResults ???
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults)
-    {
-        switch (requestCode)
-        {
-            case 1:
-                {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    lastUserLocation();
-                }
-                else
-                {
-                    //Trivial solution #1 - Setup the L'Aquila coordinates
-                    setLatitudine(42.3498479);
-                    setLongitudine(13.3995091);
-                }
-            }
-        }
-    }
+//    /**
+//     * Called after the user has been prompted to grand permissions
+//     *
+//     * @param requestCode the same code put into the ActivityCompat.requestPermissions()
+//     * @param permissions needed permission to run the activity/app
+//     * @param grantResults ???
+//     */
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           String permissions[], int[] grantResults)
+//    {
+//        switch (requestCode)
+//        {
+//            case 1:
+//                {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+//                {
+//                    lastUserLocation();
+//                }
+//                else
+//                {
+//                    //Trivial solution #1 - Setup the L'Aquila coordinates
+//                    setLatitudine(42.3498479);
+//                    setLongitudine(13.3995091);
+//                }
+//            }
+//        }
+//    }
     
     
     /**
@@ -248,17 +245,20 @@ public class U_Location extends Activity
                 //PART 3 - RECEIVE LOCATION UPDATES
                 //Source: https://developer.android.com/training/location/receive-location-updates
                 
-                if ( ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED )
-                {
-                    ActivityCompat.requestPermissions(
-                            (Activity) context,
-                            new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
-                            requestCode );
-                }
-                LocationRequest r = getLocationRequest();
-                LocationCallback c = getLocationCallback();
+                setLocationRequest();
+                createLocationCallback();
                 
-                getLocationProviderClient().requestLocationUpdates(r, c, null);
+                try
+                {
+                    locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                }
+                catch(SecurityException s)
+                {
+                    Intent intent = new Intent(context, A_Loading.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    finish(); //Eccezione! Chiude l'activity corrente e torna a quella iniziale
+                    context.startActivity(intent);
+                }
             }
         });
         
@@ -336,7 +336,7 @@ public class U_Location extends Activity
     
     public void setLocationRequest()
     {
-        LocationRequest locationRequest = new LocationRequest();
+        LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(1000);
         locationRequest.setFastestInterval(500);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -404,7 +404,7 @@ public class U_Location extends Activity
             city = city.toUpperCase(); //To match the DB records
             if(city.equals("MOUNTAIN VIEW")) //New versions bug
             {
-                city = "L'AQUILA";
+                city = "TORINO";
             }
             if(!city.equals(this.userCurrentCity))
             {
