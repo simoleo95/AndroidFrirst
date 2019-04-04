@@ -39,12 +39,6 @@ public class U_Vars
     /** U_AdapterRecycler - Records the user selected pharmacy */
     public static E_Farmacia selectedPharm;
     
-    public static final String LAST_ACCESS = "last_access_time"; // Used to save the last timestamp when the user open the app
-    public static final String FIRST_TIME = "first_time"; // Used to remember if is the first time that the user open the app
-    public static final String SWITCH_DB = "switch_database"; // Used to switch from SQLite DB to RoomDB and vice versa
-    public static final String SWITCH_HTTP = "switch_http"; // Used to switch from URLConnection to Volley and vice versa
-    public static final String SWITCH_LOCATION = "switch_location"; // Used to switch from LocationManager to GoogleService and vice versa
-    
     /** Used to save the timestamp of the last DB update */
     private static final String LAST_DB_UPDATE = "last_DB_Update";
     

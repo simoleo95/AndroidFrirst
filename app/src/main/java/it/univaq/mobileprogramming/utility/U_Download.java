@@ -34,15 +34,8 @@ public class U_Download
         //Register the Intent Broadcast receiver
         this.registerReceiver();
         
-        if(DB_isUpdated() == false)
-        {
-            updateDB();
-        }
-        else
-        {
-            signal_ParsingFinished();
-        }
-        
+        if(DB_isUpdated() == false) updateDB();
+        else signal_ParsingFinished();
     }
     
     
@@ -58,8 +51,7 @@ public class U_Download
             @Override
             public void run()
             {
-                downloadAndSave(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
-                U_Vars.set_Last_DB_UpdateTimestamp(context);
+                downloadAndSave();
                 signal_ParsingFinished();
             }
         }).start();
@@ -97,6 +89,7 @@ public class U_Download
             }
             parser.close(); //Parsing is DONE
             reader.close();
+            U_Vars.set_Last_DB_UpdateTimestamp(context);
         }
         catch(Exception e)
         {
