@@ -61,12 +61,10 @@ public class U_Location extends Activity
     public U_Location(Context context)
     {
         this.context = context;
+        this.setLocationRequest();
+        this.locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         googlePlayServices = getGooglePlayServices();
         googlePlayServices.connect();
-        
-        this.locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
-//        lastUserLocation();
-        
         getUserCurrentLocation();
     }
     
@@ -179,37 +177,6 @@ public class U_Location extends Activity
         }
     }
     
-//    /**
-//     * Called after the user has been prompted to grand permissions
-//     *
-//     * @param requestCode the same code put into the ActivityCompat.requestPermissions()
-//     * @param permissions needed permission to run the activity/app
-//     * @param grantResults ???
-//     */
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           String permissions[], int[] grantResults)
-//    {
-//        switch (requestCode)
-//        {
-//            case 1:
-//                {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-//                {
-//                    lastUserLocation();
-//                }
-//                else
-//                {
-//                    //Trivial solution #1 - Setup the L'Aquila coordinates
-//                    setLatitudine(42.3498479);
-//                    setLongitudine(13.3995091);
-//                }
-//            }
-//        }
-//    }
-    
     
     /**
      * Add a listener to whenever the connection to Google Play Services fails
@@ -229,7 +196,6 @@ public class U_Location extends Activity
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(this.getLocationRequest());
     
-    
         SettingsClient client = LocationServices.getSettingsClient(context);
         Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
         
@@ -245,7 +211,6 @@ public class U_Location extends Activity
                 //PART 3 - RECEIVE LOCATION UPDATES
                 //Source: https://developer.android.com/training/location/receive-location-updates
                 
-                setLocationRequest();
                 createLocationCallback();
                 
                 try
@@ -283,25 +248,6 @@ public class U_Location extends Activity
         });
     }
 
-    
-    
-    
-    
-    public FusedLocationProviderClient getLocationProviderClient()
-    {
-        return locationProviderClient;
-    }
-    
-    public void setLocationProviderClient(
-            FusedLocationProviderClient locationProviderClient)
-    {
-        this.locationProviderClient = locationProviderClient;
-    }
-    
-    public LocationCallback getLocationCallback()
-    {
-        return this.locationCallback;
-    }
     
     /**
      * Invoked by the Fused Location Provider to update the user location
@@ -362,39 +308,14 @@ public class U_Location extends Activity
     }
     
     
-    public Double getLatitudine()
-    {
-        return latitudine;
-    }
-    
     public void setLatitudine(Double latitudine)
     {
         this.latitudine = latitudine;
     }
     
-    public Double getLongitudine()
-    {
-        return longitudine;
-    }
-    
     public void setLongitudine(Double longitudine)
     {
         this.longitudine = longitudine;
-    }
-    
-    public Location getUserLocation()
-    {
-        return userLocation;
-    }
-    
-    public void setUserLocation(Location userLocation)
-    {
-        this.userLocation = userLocation;
-    }
-    
-    public String getUserCurrentCity()
-    {
-        return userCurrentCity;
     }
     
     public void setUserCurrentCity(String city)
@@ -414,35 +335,4 @@ public class U_Location extends Activity
             }
         }
     }
-    
-    public long getGpsUpdateInterval()
-    {
-        return gpsUpdateInterval;
-    }
-    
-    public void setGpsUpdateInterval(long gpsUpdateInterval)
-    {
-        this.gpsUpdateInterval = gpsUpdateInterval;
-    }
-    
-    public long getGpsFastestUpdateInterval()
-    {
-        return gpsFastestUpdateInterval;
-    }
-    
-    public void setGpsFastestUpdateInterval(long gpsFastestUpdateInterval)
-    {
-        this.gpsFastestUpdateInterval = gpsFastestUpdateInterval;
-    }
-    
-    public int getGpsPriority()
-    {
-        return gpsPriority;
-    }
-    
-    public void setGpsPriority(int gpsPriority)
-    {
-        this.gpsPriority = gpsPriority;
-    }
-    
 }

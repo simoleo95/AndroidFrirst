@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.sql.Timestamp;
 
 import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
@@ -33,7 +34,7 @@ public class U_Download
         //Register the Intent Broadcast receiver
         this.registerReceiver();
         
-        if(U_Vars.db_updated == false)
+        if(DB_isUpdated() == false)
         {
             updateDB();
         }
@@ -58,6 +59,7 @@ public class U_Download
             public void run()
             {
                 downloadAndSave(); //ABILITA QUESTA FUNZIONE IN FASE DI RILASCIO!
+                U_Vars.set_Last_DB_UpdateTimestamp(context);
                 signal_ParsingFinished();
             }
         }).start();
@@ -170,7 +172,6 @@ public class U_Download
     {
         Intent updateMap = new Intent(U_Vars.download_Action);
         LocalBroadcastManager.getInstance(context).sendBroadcast(updateMap);
-        U_Vars.db_updated = true;
     }
     
     
@@ -193,5 +194,22 @@ public class U_Download
     public void unregisterReceiver()
     {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiveIntent);
+    }
+    
+    
+    /**
+     * Check whether the DB needs to be updated or not
+     * @return A boolean control value signaling to update the DB or not
+     */
+    private boolean DB_isUpdated()
+    {
+        long lastUpdate = U_Vars.get_DB_lastUpdate(context);
+        if(lastUpdate == 0)
+        {
+            return false;
+        }
+        
+        long actualTime = new Timestamp(System.currentTimeMillis()).getTime();
+        return U_Vars.DB_needsUpdate > actualTime - lastUpdate;
     }
 }

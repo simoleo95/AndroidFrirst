@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import it.univaq.mobileprogramming.BuildConfig;
@@ -23,11 +24,8 @@ public class U_Vars
     /** U_MyReceiver - Finished using GPS and located the user*/
     public static boolean userHasBeenLocated = false;
     
-    /** Used to request and check app permissions */
+    /** A_Loading - Used to request and check app permissions */
     public static int requestCode = 1;
-    
-    /** Specifies whether to download the Pharmacy Excel or not */
-    public static boolean db_updated = false;
     
     /**
      * Records the current user's city
@@ -35,7 +33,7 @@ public class U_Vars
      */
     public static String userCity;
     
-    /** Records all the pharacies in the current user's city */
+    /** Records all the pharmacies in the current user's city */
     public static List<E_Farmacia> farmacieUtente;
     
     /** U_AdapterRecycler - Records the user selected pharmacy */
@@ -47,21 +45,36 @@ public class U_Vars
     public static final String SWITCH_HTTP = "switch_http"; // Used to switch from URLConnection to Volley and vice versa
     public static final String SWITCH_LOCATION = "switch_location"; // Used to switch from LocationManager to GoogleService and vice versa
     
+    /** Used to save the timestamp of the last DB update */
+    private static final String LAST_DB_UPDATE = "last_DB_Update";
     
-    public static void save(Context context, String key, String value)
+    /** DB will need to be updated each 7 days */
+    public static final long DB_needsUpdate = 1000*60*60*24*7; //7 days in milliseconds
+    
+    
+    /**
+     * Retrieve the timestamp of DB's last update
+     * @param context App context
+     * @return DB's last update timestamp
+     */
+    public static long get_DB_lastUpdate(Context context)
+    {
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+//        return Long.parseLong(preferences.getString(key, String.valueOf(fallback)));
+        return preferences.getLong(LAST_DB_UPDATE, 0);
+    }
+    
+    /**
+     * Save the current timestamp to record the last timestamp DB has been updated
+     * @param context App context
+     */
+    public static void set_Last_DB_UpdateTimestamp(Context context)
     {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(key, value);
+        editor.putLong(LAST_DB_UPDATE, new Timestamp(System.currentTimeMillis()).getTime());
         editor.apply();
-    }
-    
-    
-    public static boolean loadBoolean(Context context, String key, boolean fallback)
-    {
-        SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        return preferences.getBoolean(key, fallback);
     }
 }

@@ -24,7 +24,6 @@ public class A_Loading extends AppCompatActivity // <- to ensure backward compab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Link this class(context) to a specific XML (activity_main)
     
-        U_Vars.db_updated = false;
         this.askForAllPermissions();
     }
     
