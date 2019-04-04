@@ -13,6 +13,8 @@
     <string name="lat">Latitudine</string>
     <string name="lon">Longitudine</string>
     <string name="showOnMap">Mostra sulla mappa!</string>
+    <string name="addToFavourites">Aggiungi ai Preferiti!</string>
+    <string name="removeFromFavourites">Rimuovi dai Preferiti!</string>
 
 
 </resources>

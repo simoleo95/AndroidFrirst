@@ -25,14 +25,6 @@ public interface D_Farmacia
     public void insertThis(E_Farmacia farmacia);
     
     
-    @Delete
-    public void deleteThis(E_Farmacia farmacia);
-    
-    
-    @Update
-    public void updateThis(E_Farmacia farmacia);
-    
-    
     /**
      * Retrieve all the pharmacies in the same userCurrentCity as the user's
      *
@@ -42,7 +34,6 @@ public interface D_Farmacia
     @Query("SELECT * " +
            "FROM farmacie " +
            "WHERE comune = :comune")
-    //public E_Farmacia getAllPharmaciesIn(String comune);
     public List<E_Farmacia> getAllPharmaciesIn(String comune);
     
     
@@ -58,16 +49,6 @@ public interface D_Farmacia
     
     
     /**
-     * Retrieve all the pharmacies
-     *
-     * @return a List of all the pharmacies saved in the DB
-     */
-    @Query("SELECT * " +
-           "FROM farmacie")
-    public List<E_Farmacia> getAll();
-    
-    
-    /**
      * Selects all the user favourite pharmacies
      *
      * @return a List of all the user favourite pharmacies
@@ -77,4 +58,14 @@ public interface D_Farmacia
            "INNER JOIN preferite " +
            "ON farmacie.id = preferite.id")
     public List<E_Farmacia> getAllFavourites();
+    
+    
+    
+    @Query( "SELECT 1 " + //SELECT COUNT(*)
+            "FROM farmacie " +
+            "INNER JOIN preferite " +
+            "ON farmacie.id = preferite.id " +
+            "WHERE preferite.id = :id")
+    public boolean isThisFavourite(long id);
+    
 }

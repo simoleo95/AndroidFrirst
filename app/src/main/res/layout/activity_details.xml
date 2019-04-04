@@ -1,124 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/name" />
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/address" />
 
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/iva" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/name" />
 
-    <TextView
-        android:id="@+id/iva"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/city" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/address" />
 
-    <TextView
-        android:id="@+id/city"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/subcity" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/iva" />
 
-    <TextView
-        android:id="@+id/subcity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+        <TextView
+            android:id="@+id/iva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/provence" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/city" />
 
-    <TextView
-        android:id="@+id/provence"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/region" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/subcity" />
 
-    <TextView
-        android:id="@+id/region"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+        <TextView
+            android:id="@+id/subcity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/dateStart" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/provence" />
 
-    <TextView
-        android:id="@+id/dateStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+        <TextView
+            android:id="@+id/provence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lat" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/region" />
 
-    <TextView
-        android:id="@+id/lat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+        <TextView
+            android:id="@+id/region"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lon" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dateStart" />
 
-    <TextView
-        android:id="@+id/lon"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="TextView"/>
+        <TextView
+            android:id="@+id/dateStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
 
-    <Button
-        android:id="@+id/showOnMap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/showOnMap" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lat" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/lat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lon" />
+
+        <TextView
+            android:id="@+id/lon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="TextView"/>
+
+        <Button
+            android:id="@+id/manageFavourites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/showOnMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/showOnMap" />
+
+    </LinearLayout>
+</ScrollView>
