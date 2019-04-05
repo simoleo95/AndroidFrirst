@@ -15,6 +15,7 @@
     <string name="showOnMap">Mostra sulla mappa!</string>
     <string name="addToFavourites">Aggiungi ai Preferiti!</string>
     <string name="removeFromFavourites">Rimuovi dai Preferiti!</string>
+    <string name="needLocationPermissions">Quest\'app necessita dei permessi di Localizzazione per poter funzionare correttamente!</string>
 
 
 </resources>

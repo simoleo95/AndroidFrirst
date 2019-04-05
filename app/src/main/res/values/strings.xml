@@ -19,4 +19,6 @@
     <string name="removeFromFavourites">Remove from Favourites!</string>
     <string name="showOnMap">Show on Map!</string>
 
+    <string name="needLocationPermissions">This app needs you to grant Location Permissions in order to work correctly</string>
+
 </resources>

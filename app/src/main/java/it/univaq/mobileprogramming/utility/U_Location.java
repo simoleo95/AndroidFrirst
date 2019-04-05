@@ -65,7 +65,7 @@ public class U_Location extends Activity
         this.locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         googlePlayServices = getGooglePlayServices();
         googlePlayServices.connect();
-        getUserCurrentLocation();
+        //getUserCurrentLocation();
     }
     
     
@@ -151,6 +151,7 @@ public class U_Location extends Activity
                         @Override
                         public void onSuccess(Location location)
                         {
+                            System.out.println(location);
                             if(location != null)
                             {
                                 currentLocation = location;
@@ -160,10 +161,6 @@ public class U_Location extends Activity
                                 userLocation.setLongitude(location.getLongitude());
     
                                 findCity();
-                                System.out.println("Location: " + location.toString());
-                                System.out.println("LAT: " + location.getLatitude());
-                                System.out.println("LON: " + location.getLongitude());
-                                System.out.println("CITTà TROVATA: " + U_Vars.userCity);
                             }
                         }
                     });
@@ -186,94 +183,99 @@ public class U_Location extends Activity
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
     };
-
-
-//PART 2 - CHANGE LOCATION SETTINGS
-//Source: https://developer.android.com/training/location/change-location-settings
-    
-    public void getUserCurrentLocation()
-    {
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(this.getLocationRequest());
-    
-        SettingsClient client = LocationServices.getSettingsClient(context);
-        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
-        
-        task.addOnSuccessListener((Activity) context, new OnSuccessListener<LocationSettingsResponse>()
-        {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse)
-            {
-                // All location settings are satisfied.
-                // The client can initialize location requests here.
-                
-                
-                //PART 3 - RECEIVE LOCATION UPDATES
-                //Source: https://developer.android.com/training/location/receive-location-updates
-                
-                createLocationCallback();
-                
-                try
-                {
-                    locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                }
-                catch(SecurityException s)
-                {
-                    Intent intent = new Intent(context, A_Loading.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    finish(); //Eccezione! Chiude l'activity corrente e torna a quella iniziale
-                    context.startActivity(intent);
-                }
-            }
-        });
-        
-        task.addOnFailureListener((Activity) context, new OnFailureListener()
-        {
-            @Override
-            public void onFailure(@NonNull Exception e)
-            {
-                if(e instanceof ResolvableApiException)
-                {
-                    try
-                    {
-                        ResolvableApiException res = (ResolvableApiException) e;
-                        res.startResolutionForResult((Activity) context, 0x1); //REQUEST_CHECK_SETTINGS); //https://stackoverflow.com/questions/31572323/what-is-the-value-of-request-check-settings
-                    }
-                    catch(IntentSender.SendIntentException s)
-                    {
-                        //Ignore it?
-                    }
-                }
-            }
-        });
-    }
-
-    
-    /**
-     * Invoked by the Fused Location Provider to update the user location
-     * Source: https://developer.android.com/training/location/receive-location-updates#callback
-     */
-    public void createLocationCallback()
-    {
-        this.locationCallback = new LocationCallback()
-        {
-            @Override
-            public void onLocationResult(LocationResult locationResult)
-            {
-                super.onLocationResult(locationResult);
-                if(locationResult == null)
-                {
-                    return;
-                }
-                for(Location location : locationResult.getLocations())
-                {
-                    latitudine = location.getLatitude();
-                    longitudine = location.getLongitude();
-                    findCity();
-                }
-            }
-        };
-    }
+//
+//
+////PART 2 - CHANGE LOCATION SETTINGS
+////Source: https://developer.android.com/training/location/change-location-settings
+//
+//    public void getUserCurrentLocation()
+//    {
+//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+//                .addLocationRequest(this.getLocationRequest());
+//
+//        SettingsClient client = LocationServices.getSettingsClient(context);
+//        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+//
+//        task.addOnSuccessListener((Activity) context, new OnSuccessListener<LocationSettingsResponse>()
+//        {
+//            @Override
+//            public void onSuccess(LocationSettingsResponse locationSettingsResponse)
+//            {
+//                // All location settings are satisfied.
+//                // The client can initialize location requests here.
+//
+//
+//                //PART 3 - RECEIVE LOCATION UPDATES
+//                //Source: https://developer.android.com/training/location/receive-location-updates
+//
+//                createLocationCallback();
+//
+//                try
+//                {
+//                    locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+//                }
+//                catch(SecurityException s)
+//                {
+//                    Intent intent = new Intent(context, A_Loading.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    finish(); //Eccezione! Chiude l'activity corrente e torna a quella iniziale
+//                    context.startActivity(intent);
+//                }
+//            }
+//        });
+//
+//        task.addOnFailureListener((Activity) context, new OnFailureListener()
+//        {
+//            @Override
+//            public void onFailure(@NonNull Exception e)
+//            {
+//                if(e instanceof ResolvableApiException)
+//                {
+//                    try
+//                    {
+//                        ResolvableApiException res = (ResolvableApiException) e;
+//                        res.startResolutionForResult((Activity) context, 0x1); //REQUEST_CHECK_SETTINGS); //https://stackoverflow.com/questions/31572323/what-is-the-value-of-request-check-settings
+//                    }
+//                    catch(IntentSender.SendIntentException s)
+//                    {
+//                        //Ignore it?
+//                    }
+//                }
+//            }
+//        });
+//    }
+//
+//
+//    /**
+//     * Invoked by the Fused Location Provider to update the user location
+//     * Source: https://developer.android.com/training/location/receive-location-updates#callback
+//     */
+//    public void createLocationCallback()
+//    {
+//        this.locationCallback = new LocationCallback()
+//        {
+//            @Override
+//            public void onLocationResult(LocationResult locationResult)
+//            {
+//                super.onLocationResult(locationResult);
+//                if(locationResult == null)
+//                {
+//                    return;
+//                }
+//                for(Location location : locationResult.getLocations())
+//                {
+//                    latitudine = location.getLatitude();
+//                    longitudine = location.getLongitude();
+//                    findCity();
+//                    System.out.println("Location 2: " + location.toString());
+//                    System.out.println("LAT 2: " + location.getLatitude());
+//                    System.out.println("LON 2: " + location.getLongitude());
+//                    System.out.println("CITTà TROVATA 2: " + U_Vars.userCity);
+//                }
+//            }
+//        };
+//    }
+//
     
     public LocationRequest getLocationRequest()
     {
@@ -323,10 +325,6 @@ public class U_Location extends Activity
         if(!city.equals(""))
         {
             city = city.toUpperCase(); //To match the DB records
-            if(city.equals("MOUNTAIN VIEW")) //New versions bug
-            {
-                city = "TORINO";
-            }
             if(!city.equals(this.userCurrentCity))
             {
                 this.userCurrentCity = city;
