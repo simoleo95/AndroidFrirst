@@ -62,6 +62,7 @@ public class A_Loading extends AppCompatActivity // <- to ensure backward compab
         }
         else
         {
+            System.out.println("OK OK OK!!!");
             location = new U_Location(this);
         }
     }
@@ -76,10 +77,12 @@ public class A_Loading extends AppCompatActivity // <- to ensure backward compab
         {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
+                System.out.println("OK 1");
                 location = new U_Location(this);
             }
             else
             {
+                System.out.println("EEEEEEEEEHM nope!!!");
                 Toast.makeText(getApplicationContext(), R.string.needLocationPermissions, Toast.LENGTH_LONG).show();
                 finish();
             }

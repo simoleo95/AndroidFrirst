@@ -40,17 +40,11 @@ dependencies
     //RoomDatabase
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
-//
-//    //Reactive queries with RxJava - RoomDatabase
-//    implementation 'androidx.room:room-rxjava2:2.1.0-alpha02'
-
 
     //Enable Google Play Services support for better location-based functionalities
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-base:15.0.1'
-//    implementation 'com.google.android.gms:play-services-maps:16.1.0'
-//    implementation 'com.google.android.gms:play-services-base:16.1.0'
 
 
 }

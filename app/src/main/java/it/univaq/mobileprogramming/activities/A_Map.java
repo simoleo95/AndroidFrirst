@@ -55,10 +55,31 @@ public class A_Map extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         googleMap.setMyLocationEnabled(true);
-        this.showPharms();
+        this.showSelected();
+//        this.showPharms();
     }
     
     
+    /**
+     * Display a marker on the selected pharmacy
+     */
+    private void showSelected()
+    {
+        LatLng marker2add = new LatLng(U_Vars.selectedPharm.getLat_Double(), U_Vars.selectedPharm.getLon_Double());
+    
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(marker2add);
+        markerOptions.title(U_Vars.selectedPharm.getFarmacia());
+        markerOptions.snippet(U_Vars.selectedPharm.getIndirizzo());
+    
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        this.zoomOnCity();
+    
+        Marker marker = mMap.addMarker(markerOptions);
+        marker.showInfoWindow();
+    }
+
+
     /**
      * Display a marker for each Pharmacy found
      */
@@ -86,9 +107,9 @@ public class A_Map extends FragmentActivity implements OnMapReadyCallback
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                 markerOptions.alpha(0.70f); //70% transparency
             }
-            
-            Marker marker = mMap.addMarker(markerOptions);
-            marker.showInfoWindow();
+            mMap.addMarker(markerOptions);
+//            Marker marker = mMap.addMarker(markerOptions);
+//            marker.showInfoWindow(); //Shows the marker on the LAST pharmacy found ONLY!
         }
     }
     
