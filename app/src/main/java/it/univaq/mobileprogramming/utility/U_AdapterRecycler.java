@@ -38,7 +38,6 @@ public class U_AdapterRecycler extends RecyclerView.Adapter<U_AdapterRecycler.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) //https://stackoverflow.com/questions/37523308/when-onbindviewholder-is-called-and-how-it-works/37524217
     {
-        //This function will ITERATE itself on EACH element present in farmacia[] array
         E_Farmacia farmacia = data.get(i);
         viewHolder.pharmacy.setText(farmacia.getFarmacia());
         viewHolder.address.setText(farmacia.getIndirizzo());

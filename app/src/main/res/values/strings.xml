@@ -21,4 +21,7 @@
 
     <string name="needLocationPermissions">This app needs you to grant Location Permissions in order to work correctly</string>
 
+    <string name="showFavourite">Show Favourites</string>
+    <string name="showInCity">Show in current city</string>
+
 </resources>

@@ -54,7 +54,7 @@ public class A_Map extends FragmentActivity implements OnMapReadyCallback
         {
             return;
         }
-        googleMap.setMyLocationEnabled(true);
+        mMap.setMyLocationEnabled(true);
         this.showSelected();
 //        this.showPharms();
     }

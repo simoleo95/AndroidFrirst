@@ -1,6 +1,8 @@
 package it.univaq.mobileprogramming.utility;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -8,7 +10,11 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import it.univaq.mobileprogramming.BuildConfig;
+import it.univaq.mobileprogramming.activities.A_ShowPharmaciesList;
+import it.univaq.mobileprogramming.database.D_Database;
 import it.univaq.mobileprogramming.entity.E_Farmacia;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class U_Vars
 {
@@ -26,6 +32,9 @@ public class U_Vars
     
     /** A_Loading - Used to request and check app permissions */
     public static int requestCode = 1;
+    
+    /** A_Loading - Used to switch menu options */
+    public static boolean showingFavourites = false;
     
     /**
      * Records the current user's city
@@ -70,5 +79,51 @@ public class U_Vars
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(LAST_DB_UPDATE, new Timestamp(System.currentTimeMillis()).getTime());
         editor.apply();
+    }
+    
+    
+    /**
+     * Fetch the pharmacies in the current city and start a new activity do display them
+     * @param context The app context
+     */
+    public static void showFarms(final Context context)
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                D_Database room = D_Database.getInstance(context);
+                U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(U_Vars.userCity);
+                U_Vars.sendIntent(context);
+            }
+        }).start();
+    }
+    
+    
+    /**
+     * Fetch the user's favourite pharmacies and start a new activity do display them
+     * @param context The app context
+     */
+    public static void showFavourites(final Context context)
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                D_Database room = D_Database.getInstance(context);
+                U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllFavourites();
+                U_Vars.sendIntent(context);
+            }
+        }).start();
+    }
+    
+    
+    private static void sendIntent(final Context context)
+    {
+        Intent showFarmList = new Intent(context, A_ShowPharmaciesList.class);
+        showFarmList.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(showFarmList);
     }
 }

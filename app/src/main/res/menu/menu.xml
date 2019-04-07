@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.A_Loading">
+
+    <item
+        android:id="@+id/showFavourite"
+        android:title="@string/showFavourite"
+        android:icon="@android:drawable/btn_star"/>
+
+    <item
+        android:id="@+id/showInCity"
+        android:title="@string/showInCity"
+        android:icon="@android:drawable/btn_star"/>
+
+</menu>

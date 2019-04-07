@@ -26,54 +26,16 @@ public class U_MyReceiver extends BroadcastReceiver
             if(action.equals(U_Vars.download_Action))
             {
                 U_Vars.dataHasBeenSavedToDB = true;
-//                U_Vars.userHasBeenLocated = true;
             }
             else if(action.equals(U_Vars.location_Action))
             {
-//                U_Vars.dataHasBeenSavedToDB = true; //Commenta in fase di RILASCIO
                 U_Vars.userHasBeenLocated = true;
             }
             if((action.equals(U_Vars.download_Action) || action.equals(U_Vars.location_Action))
                     && U_Vars.dataHasBeenSavedToDB && U_Vars.userHasBeenLocated)
             {
-                this.showFarms(context);
+                U_Vars.showFarms(context);
             }
-//            else
-//            {
-//                System.out.println((action.equals(U_Vars.download_Action)
-//                        + " OR " + action.equals(U_Vars.location_Action))
-//                        + " AND " + U_Vars.dataHasBeenSavedToDB
-//                        + " AND " + U_Vars.userHasBeenLocated);
-//            }
         }
-//        else
-//        {
-//            System.out.println("Non ho ricevuto niente sob :(");
-//        }
-    }
-    
-    /**
-     * Fetch the pharmacies in the current city and start a new activity do display them
-     * @param context The app context
-     */
-    public void showFarms(final Context context)
-    {
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                D_Database room = D_Database.getInstance(context);
-                U_Vars.farmacieUtente = room.D_Farmacia_Access().getAllPharmaciesIn(U_Vars.userCity);
-                sendIntent(context);
-            }
-        }).start();
-    }
-    
-    private void sendIntent(final Context context)
-    {
-        Intent showFarmList = new Intent(context, A_ShowPharmaciesList.class);
-        showFarmList.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(showFarmList);
     }
 }

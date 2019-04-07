@@ -16,6 +16,8 @@
     <string name="addToFavourites">Aggiungi ai Preferiti!</string>
     <string name="removeFromFavourites">Rimuovi dai Preferiti!</string>
     <string name="needLocationPermissions">Quest\'app necessita dei permessi di Localizzazione per poter funzionare correttamente!</string>
+    <string name="showFavourite">Mostra le Preferite</string>
+    <string name="showInCity">Mostra nella città attuale</string>
 
 
 </resources>
